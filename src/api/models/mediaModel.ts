@@ -1,7 +1,8 @@
 import {ResultSetHeader, RowDataPacket} from 'mysql2';
-import {MediaItem} from '../../types/DBTypes';
+import {MediaItem, TokenContent} from '../../types/DBTypes';
 import promisePool from '../../lib/db';
 import {fetchData} from '../../lib/functions';
+import {MessageResponse} from '../../types/MessageTypes';
 
 /**
  * Get all media items from the database
@@ -132,14 +133,20 @@ const putMedia = async (
 
 const deleteMedia = async (
   id: number,
+  user: TokenContent,
   token: string
-): Promise<number | null> => {
+): Promise<MessageResponse> => {
   console.log('deleteMedia', id);
   const media = await fetchMediaById(id);
   console.log(media);
 
   if (!media) {
-    return null;
+    return {message: 'Media not found'};
+  }
+
+  // if admin add user_id from media object to user object from token content
+  if (user.level_name === 'Admin') {
+    user.user_id = media.user_id;
   }
 
   // remove environment variable UPLOAD_URL from filename
@@ -149,20 +156,6 @@ const deleteMedia = async (
   );
 
   console.log(token);
-
-  const options = {
-    method: 'DELETE',
-    headers: {
-      Authorization: 'Bearer ' + token,
-    },
-  };
-
-  const deleteResult = await fetchData(
-    `${process.env.UPLOAD_SERVER}/delete/${media.filename}`,
-    options
-  );
-
-  console.log('deleteResult', deleteResult);
 
   const connection = await promisePool.getConnection();
 
@@ -175,15 +168,38 @@ const deleteMedia = async (
 
     await connection.execute('DELETE FROM Ratings WHERE media_id = ?;', [id]);
 
+    // ! user_id in SQL so that only the owner of the media item can delete it
     const [result] = await connection.execute<ResultSetHeader>(
-      'DELETE FROM MediaItems WHERE media_id = ?;',
-      [id]
+      'DELETE FROM MediaItems WHERE media_id = ? and user_id = ?;',
+      [id, user.user_id]
     );
 
+    if (result.affectedRows === 0) {
+      return {message: 'Media not deleted'};
+    }
+
+    // delete file from upload server
+    const options = {
+      method: 'DELETE',
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    };
+
+    const deleteResult = await fetchData<MessageResponse>(
+      `${process.env.UPLOAD_SERVER}/delete/${media.filename}`,
+      options
+    );
+
+    console.log('deleteResult', deleteResult);
+    if (deleteResult.message !== 'File deleted') {
+      throw new Error('File not deleted');
+    }
+
+    // if no errors commit transaction
     await connection.commit();
 
-    console.log('result', result);
-    return id;
+    return {message: 'Media deleted'};
   } catch (e) {
     await connection.rollback();
     console.error('error', (e as Error).message);
