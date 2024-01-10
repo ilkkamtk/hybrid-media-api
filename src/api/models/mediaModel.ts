@@ -130,23 +130,35 @@ const putMedia = async (
  * @throws {Error} - error if database query fails
  */
 
-const deleteMedia = async (id: number): Promise<number | null> => {
+const deleteMedia = async (
+  id: number,
+  token: string
+): Promise<number | null> => {
   console.log('deleteMedia', id);
   const media = await fetchMediaById(id);
+  console.log(media);
 
   if (!media) {
     return null;
   }
+
+  // remove environment variable UPLOAD_URL from filename
+  media.filename = media?.filename.replace(
+    process.env.UPLOAD_URL as string,
+    ''
+  );
+
+  console.log(token);
+
   const options = {
-    method: 'POST',
+    method: 'DELETE',
     headers: {
-      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + token,
     },
-    body: JSON.stringify({filename: media.filename}),
   };
 
   const deleteResult = await fetchData(
-    process.env.UPLOAD_SERVER + '/delete',
+    `${process.env.UPLOAD_SERVER}/delete/${media.filename}`,
     options
   );
 

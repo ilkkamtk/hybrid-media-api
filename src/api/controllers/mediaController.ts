@@ -69,12 +69,12 @@ const mediaPost = async (
 
 const mediaDelete = async (
   req: Request<{id: string}>,
-  res: Response<MessageResponse>,
+  res: Response<MessageResponse, {user: TokenContent; token: string}>,
   next: NextFunction
 ) => {
   try {
     const id = Number(req.params.id);
-    const deleted_id = await deleteMedia(id);
+    const deleted_id = await deleteMedia(id, res.locals.token);
     if (deleted_id === null) {
       const error = new CustomError('Media not deleted', 500);
       next(error);
