@@ -53,7 +53,7 @@ const mediaPost = async (
 ) => {
   try {
     // add user_id to media object from token
-    req.body.user_id = res.locals.user.id;
+    req.body.user_id = res.locals.user.user_id;
     console.log(req.body);
     const newMedia = await postMedia(req.body);
     if (newMedia === null) {

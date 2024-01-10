@@ -16,6 +16,7 @@ type MediaItem = {
   media_id: number;
   user_id: number;
   filename: string;
+  thumbnail: string;
   filesize: number;
   media_type: string;
   title: string;
@@ -77,10 +78,7 @@ type MostLikedMedia = Pick<
     likes_count: bigint;
   };
 
-type TokenContent = {
-  id: number;
-  role: 'User' | 'Admin' | 'Guest';
-};
+type TokenContent = Pick<User, 'user_id'> & Pick<UserLevel, 'level_name'>;
 
 export type {
   UserLevel,
