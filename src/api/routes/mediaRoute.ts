@@ -11,9 +11,6 @@ const router = express.Router();
 
 router.route('/').get(mediaListGet).post(authenticate, mediaPost);
 
-router
-  .route('/:id')
-  .get(authenticate, mediaGet)
-  .delete(authenticate, mediaDelete);
+router.route('/:id').get(mediaGet).delete(authenticate, mediaDelete);
 
 export default router;

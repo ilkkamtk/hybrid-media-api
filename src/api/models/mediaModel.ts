@@ -15,11 +15,10 @@ const fetchAllMedia = async (): Promise<MediaItem[] | null> => {
   const uploadPath = process.env.UPLOAD_URL;
   try {
     const [rows] = await promisePool.execute<RowDataPacket[] & MediaItem[]>(
-      `SELECT media_id,
+      `SELECT *,
       CONCAT(?, filename) AS filename,
-      CONCAT(?, CONCAT(filename, "-thumb.png")) AS thumbnail,
-      filesize, media_type, title, description, MediaItems.created_at, Users.user_id, username
-      FROM MediaItems JOIN Users ON MediaItems.user_id = Users.user_id;`,
+      CONCAT(?, CONCAT(filename, "-thumb.png")) AS thumbnail
+      FROM MediaItems`,
       [uploadPath, uploadPath]
     );
     if (rows.length === 0) {
@@ -44,11 +43,10 @@ const fetchMediaById = async (id: number): Promise<MediaItem | null> => {
   const uploadPath = process.env.UPLOAD_URL;
   try {
     // TODO: replace * with specific column names needed in this case
-    const sql = `SELECT media_id,
+    const sql = `SELECT *,
                 CONCAT(?, filename) AS filename,
-                CONCAT(?, CONCAT(filename, "-thumb.png")) AS thumbnail,
-                filesize, media_type, title, description, MediaItems.created_at, Users.user_id, username
-                FROM MediaItems JOIN Users ON MediaItems.user_id = Users.user_id
+                CONCAT(?, CONCAT(filename, "-thumb.png")) AS thumbnail
+                FROM MediaItems
                 WHERE media_id=?`;
     const params = [uploadPath, uploadPath, id];
     const [rows] = await promisePool.execute<RowDataPacket[] & MediaItem[]>(
