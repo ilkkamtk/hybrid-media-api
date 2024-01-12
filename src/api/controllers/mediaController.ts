@@ -5,9 +5,9 @@ import {
   fetchMediaById,
   postMedia,
 } from '../models/mediaModel';
-import {MediaItem, TokenContent} from '../../types/DBTypes';
 import CustomError from '../../classes/CustomError';
-import {MediaResponse, MessageResponse} from '../../types/MessageTypes';
+import {MediaResponse, MessageResponse} from '@sharedTypes/MessageTypes';
+import {MediaItem, TokenContent} from '@sharedTypes/DBTypes';
 
 const mediaListGet = async (
   req: Request,

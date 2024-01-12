@@ -1,8 +1,8 @@
 import {ResultSetHeader, RowDataPacket} from 'mysql2';
-import {MediaItem, TokenContent} from '../../types/DBTypes';
+import {MediaItem, TokenContent} from '@sharedTypes/DBTypes';
 import promisePool from '../../lib/db';
 import {fetchData} from '../../lib/functions';
-import {MessageResponse} from '../../types/MessageTypes';
+import {MessageResponse} from '@sharedTypes/MessageTypes';
 
 /**
  * Get all media items from the database

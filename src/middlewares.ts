@@ -2,8 +2,8 @@ import {NextFunction, Request, Response} from 'express';
 import jwt from 'jsonwebtoken';
 
 import CustomError from './classes/CustomError';
-import {ErrorResponse} from './types/MessageTypes';
-import {TokenContent} from './types/DBTypes';
+import {ErrorResponse} from '@sharedTypes/MessageTypes';
+import {TokenContent} from '@sharedTypes/DBTypes';
 
 const notFound = (req: Request, res: Response, next: NextFunction) => {
   const error = new CustomError(`🔍 - Not Found - ${req.originalUrl}`, 404);
