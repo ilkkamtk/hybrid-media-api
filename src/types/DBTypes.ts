@@ -9,7 +9,7 @@ type User = {
   password: string;
   email: string;
   user_level_id: number;
-  created_at: Date;
+  created_at: Date | string;
 };
 
 type MediaItem = {
@@ -21,7 +21,7 @@ type MediaItem = {
   media_type: string;
   title: string;
   description: string | null;
-  created_at: Date;
+  created_at: Date | string;
 };
 
 type Comment = {
@@ -78,7 +78,15 @@ type MostLikedMedia = Pick<
     likes_count: bigint;
   };
 
+// type gymnastics to get rid of user_level_id from User type and replace it with level_name from UserLevel type
+type UserWithLevel = Omit<User, 'user_level_id'> &
+  Pick<UserLevel, 'level_name'>;
+
+type UserWithNoPassword = Omit<UserWithLevel, 'password'>;
+
 type TokenContent = Pick<User, 'user_id'> & Pick<UserLevel, 'level_name'>;
+
+type MediaItemWithOwner = MediaItem & Pick<User, 'username'>;
 
 export type {
   UserLevel,
@@ -91,5 +99,8 @@ export type {
   MediaItemTag,
   UploadResult,
   MostLikedMedia,
+  UserWithLevel,
+  UserWithNoPassword,
   TokenContent,
+  MediaItemWithOwner,
 };
