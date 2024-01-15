@@ -2,6 +2,7 @@ import {Request, Response, NextFunction} from 'express';
 import {
   deleteMedia,
   fetchAllMedia,
+  fetchAllMediaByAppId,
   fetchMediaById,
   postMedia,
 } from '../models/mediaModel';
@@ -16,6 +17,24 @@ const mediaListGet = async (
 ) => {
   try {
     const media = await fetchAllMedia();
+    if (media === null) {
+      const error = new CustomError('No media found', 404);
+      next(error);
+      return;
+    }
+    res.json(media);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const mediaListGetByAppId = async (
+  req: Request<{id: string}>,
+  res: Response<MediaItem[]>,
+  next: NextFunction
+) => {
+  try {
+    const media = await fetchAllMediaByAppId(req.params.id);
     if (media === null) {
       const error = new CustomError('No media found', 404);
       next(error);
@@ -87,4 +106,4 @@ const mediaDelete = async (
   }
 };
 
-export {mediaListGet, mediaGet, mediaPost, mediaDelete};
+export {mediaListGet, mediaListGetByAppId, mediaGet, mediaPost, mediaDelete};

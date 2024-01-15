@@ -31,6 +31,29 @@ const fetchAllMedia = async (): Promise<MediaItem[] | null> => {
   }
 };
 
+const fetchAllMediaByAppId = async (
+  id: string
+): Promise<MediaItem[] | null> => {
+  const uploadPath = process.env.UPLOAD_URL;
+  try {
+    const [rows] = await promisePool.execute<RowDataPacket[] & MediaItem[]>(
+      `SELECT *,
+      CONCAT(?, filename) AS filename,
+      CONCAT(?, CONCAT(filename, "-thumb.png")) AS thumbnail
+      FROM MediaItems
+      WHERE app_id = ?`,
+      [uploadPath, uploadPath, id]
+    );
+    if (rows.length === 0) {
+      return null;
+    }
+    return rows;
+  } catch (e) {
+    console.error('fetchAllMedia error', (e as Error).message);
+    throw new Error((e as Error).message);
+  }
+};
+
 /**
  * Get media item by id from the database
  *
@@ -73,10 +96,19 @@ const fetchMediaById = async (id: number): Promise<MediaItem | null> => {
 const postMedia = async (
   media: Omit<MediaItem, 'media_id' | 'created_at'>
 ): Promise<MediaItem | null> => {
-  const {user_id, filename, filesize, media_type, title, description} = media;
-  const sql = `INSERT INTO MediaItems (user_id, filename, filesize, media_type, title, description)
-               VALUES (?, ?, ?, ?, ?, ?)`;
-  const params = [user_id, filename, filesize, media_type, title, description];
+  const {user_id, filename, filesize, media_type, title, description, app_id} =
+    media;
+  const sql = `INSERT INTO MediaItems (user_id, filename, filesize, media_type, title, description, app_id)
+               VALUES (?, ?, ?, ?, ?, ?, ?)`;
+  const params = [
+    user_id,
+    filename,
+    filesize,
+    media_type,
+    title,
+    description,
+    app_id,
+  ];
   try {
     const result = await promisePool.execute<ResultSetHeader>(sql, params);
     console.log('result', result);
@@ -279,6 +311,7 @@ const fetchHighestRatedMedia = async (): Promise<MediaItem | undefined> => {
 
 export {
   fetchAllMedia,
+  fetchAllMediaByAppId,
   fetchMediaById,
   postMedia,
   deleteMedia,
