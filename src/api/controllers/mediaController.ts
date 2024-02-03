@@ -93,7 +93,12 @@ const mediaDelete = async (
 ) => {
   try {
     const id = Number(req.params.id);
-    const result = await deleteMedia(id, res.locals.user, res.locals.token);
+    const result = await deleteMedia(
+      id,
+      res.locals.user.user_id,
+      res.locals.token,
+      res.locals.user.level_name
+    );
     if (result === null) {
       const error = new CustomError('Media not deleted', 500);
       next(error);
