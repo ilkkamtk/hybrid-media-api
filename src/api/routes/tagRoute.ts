@@ -7,11 +7,20 @@ import {
   tagFilesByTagGet,
   tagDeleteFromMedia,
 } from '../controllers/tagController';
-import {authenticate} from '../../middlewares';
+import {authenticate, validationErrors} from '../../middlewares';
+import {body} from 'express-validator';
 
 const router = express.Router();
 
-router.route('/').get(tagListGet).post(authenticate, tagPost);
+router
+  .route('/')
+  .get(tagListGet)
+  .post(
+    authenticate,
+    body('tag_name').notEmpty().isString().escape(),
+    validationErrors,
+    tagPost
+  );
 
 router
   .route('/bymedia/:id')

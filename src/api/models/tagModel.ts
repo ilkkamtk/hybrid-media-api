@@ -2,7 +2,6 @@ import {ResultSetHeader, RowDataPacket} from 'mysql2';
 import {MediaItem, Tag, TagResult} from '@sharedTypes/DBTypes';
 import promisePool from '../../lib/db';
 import {MessageResponse} from '@sharedTypes/MessageTypes';
-import {fetchMediaById} from './mediaModel';
 
 // Request a list of tags
 const fetchAllTags = async (): Promise<Tag[] | null> => {

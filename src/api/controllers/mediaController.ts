@@ -1,7 +1,6 @@
 import {Request, Response, NextFunction} from 'express';
 import {
   fetchAllMedia,
-  fetchMediaByTag,
   fetchMediaById,
   postMedia,
   deleteMedia,
@@ -40,25 +39,6 @@ const mediaGet = async (
   try {
     const id = Number(req.params.id);
     const media = await fetchMediaById(id);
-    if (media) {
-      res.json(media);
-      return;
-    }
-    const error = new CustomError('No media found', 404);
-    next(error);
-  } catch (error) {
-    next(error);
-  }
-};
-
-// list of media items by tag
-const mediaByTagGet = async (
-  req: Request<{tag: string}>,
-  res: Response<MediaItem[]>,
-  next: NextFunction
-) => {
-  try {
-    const media = await fetchMediaByTag(req.params.tag);
     if (media) {
       res.json(media);
       return;
@@ -196,7 +176,6 @@ const mediaListHighestRatedGet = async (
 export {
   mediaListGet,
   mediaGet,
-  mediaByTagGet,
   mediaPost,
   mediaPut,
   mediaDelete,

@@ -1,5 +1,5 @@
 import {ResultSetHeader, RowDataPacket} from 'mysql2';
-import {Rating} from '@sharedTypes/DBTypes';
+import {Rating, UserLevel} from '@sharedTypes/DBTypes';
 import promisePool from '../../lib/db';
 import {MessageResponse} from '@sharedTypes/MessageTypes';
 
@@ -79,8 +79,9 @@ const fetchRatingsByUserId = async (
 const postRating = async (
   media_id: number,
   user_id: number,
-  rating_value: number
-): Promise<Rating | null> => {
+  rating_value: number,
+  level_name: UserLevel['level_name']
+): Promise<MessageResponse | null> => {
   try {
     // check if rating already exists, if so delete it because of foreign key constraints
     const [ratingExists] = await promisePool.execute<
@@ -91,7 +92,7 @@ const postRating = async (
     ]);
 
     if (ratingExists.length > 0) {
-      await deleteRating(ratingExists[0].rating_id, user_id);
+      await deleteRating(ratingExists[0].rating_id, user_id, level_name);
     }
 
     const [ratingResult] = await promisePool.execute<ResultSetHeader>(
@@ -109,7 +110,7 @@ const postRating = async (
     if (rows.length === 0) {
       return null;
     }
-    return rows[0];
+    return {message: 'Rating added'};
   } catch (e) {
     console.error('postRating error', (e as Error).message);
     throw new Error((e as Error).message);
@@ -119,38 +120,29 @@ const postRating = async (
 // Delete a rating
 const deleteRating = async (
   media_id: number,
-  user_id: number
+  user_id: number,
+  level_name: UserLevel['level_name']
 ): Promise<MessageResponse | null> => {
   try {
-    const [ratingResult] = await promisePool.execute<ResultSetHeader>(
-      'DELETE FROM Ratings WHERE rating_id = ? AND user_id = ?',
-      [media_id, user_id]
-    );
+    let sql = '';
+    if (level_name === 'Admin') {
+      sql = promisePool.format('DELETE FROM Ratings WHERE rating_id = ?', [
+        media_id,
+      ]);
+    } else {
+      sql = promisePool.format(
+        'DELETE FROM Ratings WHERE rating_id = ? AND user_id = ?',
+        [media_id, user_id]
+      );
+    }
+
+    const [ratingResult] = await promisePool.execute<ResultSetHeader>(sql);
     if (ratingResult.affectedRows === 0) {
       return null;
     }
     return {message: 'Rating deleted'};
   } catch (e) {
     console.error('deleteRating error', (e as Error).message);
-    throw new Error((e as Error).message);
-  }
-};
-
-// Delete a rating as admin
-const deleteRatingAsAdmin = async (
-  media_id: number
-): Promise<MessageResponse | null> => {
-  try {
-    const [ratingResult] = await promisePool.execute<ResultSetHeader>(
-      'DELETE FROM Ratings WHERE rating_id = ?',
-      [media_id]
-    );
-    if (ratingResult.affectedRows === 0) {
-      return null;
-    }
-    return {message: 'Rating deleted'};
-  } catch (e) {
-    console.error('deleteRatingAsAdmin error', (e as Error).message);
     throw new Error((e as Error).message);
   }
 };
@@ -162,5 +154,4 @@ export {
   fetchAverageRatingByMediaId,
   postRating,
   deleteRating,
-  deleteRatingAsAdmin,
 };
