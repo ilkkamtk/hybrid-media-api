@@ -1,10 +1,11 @@
 import express from 'express';
 import {
   tagListGet,
-  tagMediaGet,
-  mediaTagsGet,
+  tagListByMediaIdGet,
   tagPost,
   tagDelete,
+  tagFilesByTagGet,
+  tagDeleteFromMedia,
 } from '../controllers/tagController';
 import {authenticate} from '../../middlewares';
 
@@ -12,8 +13,13 @@ const router = express.Router();
 
 router.route('/').get(tagListGet).post(authenticate, tagPost);
 
-router.route('/:id').get(tagMediaGet).delete(authenticate, tagDelete);
+router
+  .route('/bymedia/:id')
+  .get(tagListByMediaIdGet)
+  .delete(authenticate, tagDeleteFromMedia);
 
-router.route('/media/:id').get(mediaTagsGet);
+router.route('/bytag/:tag').get(tagFilesByTagGet);
+
+router.route('/:id').delete(authenticate, tagDelete);
 
 export default router;

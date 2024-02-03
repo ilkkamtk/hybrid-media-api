@@ -1,10 +1,14 @@
 import {Request, Response, NextFunction} from 'express';
 import {
-  deleteMedia,
   fetchAllMedia,
-  fetchAllMediaByAppId,
+  fetchMediaByTag,
   fetchMediaById,
   postMedia,
+  deleteMedia,
+  fetchMostLikedMedia,
+  fetchMostCommentedMedia,
+  fetchHighestRatedMedia,
+  putMedia,
 } from '../models/mediaModel';
 import CustomError from '../../classes/CustomError';
 import {MediaResponse, MessageResponse} from '@sharedTypes/MessageTypes';
@@ -17,30 +21,12 @@ const mediaListGet = async (
 ) => {
   try {
     const media = await fetchAllMedia();
-    if (media === null) {
-      const error = new CustomError('No media found', 404);
-      next(error);
+    if (media) {
+      res.json(media);
       return;
     }
-    res.json(media);
-  } catch (error) {
+    const error = new CustomError('No media found', 404);
     next(error);
-  }
-};
-
-const mediaListGetByAppId = async (
-  req: Request<{id: string}>,
-  res: Response<MediaItem[]>,
-  next: NextFunction
-) => {
-  try {
-    const media = await fetchAllMediaByAppId(req.params.id);
-    if (media === null) {
-      const error = new CustomError('No media found', 404);
-      next(error);
-      return;
-    }
-    res.json(media);
   } catch (error) {
     next(error);
   }
@@ -54,12 +40,31 @@ const mediaGet = async (
   try {
     const id = Number(req.params.id);
     const media = await fetchMediaById(id);
-    if (media === null) {
-      const error = new CustomError('No media found', 404);
-      next(error);
+    if (media) {
+      res.json(media);
       return;
     }
-    res.json(media);
+    const error = new CustomError('No media found', 404);
+    next(error);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// list of media items by tag
+const mediaByTagGet = async (
+  req: Request<{tag: string}>,
+  res: Response<MediaItem[]>,
+  next: NextFunction
+) => {
+  try {
+    const media = await fetchMediaByTag(req.params.tag);
+    if (media) {
+      res.json(media);
+      return;
+    }
+    const error = new CustomError('No media found', 404);
+    next(error);
   } catch (error) {
     next(error);
   }
@@ -75,12 +80,12 @@ const mediaPost = async (
     req.body.user_id = res.locals.user.user_id;
     console.log(req.body);
     const newMedia = await postMedia(req.body);
-    if (newMedia === null) {
-      const error = new CustomError('Media not created', 500);
-      next(error);
+    if (newMedia) {
+      res.json({message: 'Media created', media: newMedia});
       return;
     }
-    res.json({message: 'Media created', media: newMedia});
+    const error = new CustomError('Media not created', 500);
+    next(error);
   } catch (error) {
     next(error);
   }
@@ -99,16 +104,103 @@ const mediaDelete = async (
       res.locals.token,
       res.locals.user.level_name
     );
-    if (result === null) {
-      const error = new CustomError('Media not deleted', 500);
-      next(error);
+    if (result) {
+      res.json({message: 'Media deleted'});
       return;
     }
-
-    res.json(result);
+    const error = new CustomError('Media not deleted', 500);
+    next(error);
   } catch (error) {
     next(error);
   }
 };
 
-export {mediaListGet, mediaListGetByAppId, mediaGet, mediaPost, mediaDelete};
+const mediaPut = async (
+  req: Request<{id: string}, {}, Pick<MediaItem, 'title' | 'description'>>,
+  res: Response<MediaResponse, {user: TokenContent}>,
+  next: NextFunction
+) => {
+  try {
+    const id = Number(req.params.id);
+    const media = await putMedia(
+      req.body,
+      id,
+      res.locals.user.user_id,
+      res.locals.user.level_name
+    );
+    if (media) {
+      res.json({message: 'Media updated', media});
+      return;
+    }
+    const error = new CustomError('Media not updated', 500);
+    next(error);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const mediaListMostLikedGet = async (
+  req: Request,
+  res: Response<MediaItem>,
+  next: NextFunction
+) => {
+  try {
+    const media = await fetchMostLikedMedia();
+    if (media) {
+      res.json(media);
+      return;
+    }
+    const error = new CustomError('No media found', 404);
+    next(error);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const mediaListMostCommentedGet = async (
+  req: Request,
+  res: Response<MediaItem>,
+  next: NextFunction
+) => {
+  try {
+    const media = await fetchMostCommentedMedia();
+    if (media) {
+      res.json(media);
+      return;
+    }
+    const error = new CustomError('No media found', 404);
+    next(error);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const mediaListHighestRatedGet = async (
+  req: Request,
+  res: Response<MediaItem>,
+  next: NextFunction
+) => {
+  try {
+    const media = await fetchHighestRatedMedia();
+    if (media) {
+      res.json(media);
+      return;
+    }
+    const error = new CustomError('No media found', 404);
+    next(error);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export {
+  mediaListGet,
+  mediaGet,
+  mediaByTagGet,
+  mediaPost,
+  mediaPut,
+  mediaDelete,
+  mediaListMostLikedGet,
+  mediaListMostCommentedGet,
+  mediaListHighestRatedGet,
+};
