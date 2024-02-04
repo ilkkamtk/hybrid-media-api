@@ -27,7 +27,7 @@ router
   .get(tagListByMediaIdGet)
   .delete(authenticate, tagDeleteFromMedia);
 
-router.route('/bytag/:tag').get(tagFilesByTagGet);
+router.route('/bytag/:tag_id').get(tagFilesByTagGet);
 
 router.route('/:id').delete(authenticate, tagDelete);
 

@@ -50,13 +50,15 @@ const commentListByMediaIdGet = async (
 };
 
 // list of comments by user id
-const commentListByUserIdGet = async (
-  req: Request<{id: string}>,
-  res: Response<Comment[]>,
+const commentListByUserGet = async (
+  req: Request,
+  res: Response<Comment[], {user: TokenContent}>,
   next: NextFunction
 ) => {
   try {
-    const comments = await fetchCommentsByUserId(Number(req.params.id));
+    const comments = await fetchCommentsByUserId(
+      Number(res.locals.user.user_id)
+    );
     if (comments) {
       res.json(comments);
       return;
@@ -173,7 +175,7 @@ const commentDelete = async (
 export {
   commentListGet,
   commentListByMediaIdGet,
-  commentListByUserIdGet,
+  commentListByUserGet,
   commentCountByMediaIdGet,
   commentGet,
   commentPost,

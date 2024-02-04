@@ -3,7 +3,7 @@ import {
   fetchAllTags,
   postTag,
   fetchTagsByMediaId,
-  fetchFilesByTagByName,
+  fetchFilesByTagById,
   deleteTag,
   deleteTagFromMedia,
 } from '../models/tagModel';
@@ -66,12 +66,12 @@ const tagPost = async (
 };
 
 const tagFilesByTagGet = async (
-  req: Request<{tag: string}>,
+  req: Request<{tag_id: string}>,
   res: Response<MediaItem[]>,
   next: NextFunction
 ) => {
   try {
-    const files = await fetchFilesByTagByName(req.params.tag);
+    const files = await fetchFilesByTagById(Number(req.params.tag_id));
     if (files) {
       res.json(files);
       return;

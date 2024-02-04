@@ -24,7 +24,7 @@ router
 
 router.route('/bymedia/:id').get(ratingListByMediaIdGet);
 
-router.route('/byuser/:id').get(authenticate, ratingListByUserIdGet);
+router.route('/byuser/:id').get(ratingListByUserIdGet);
 
 router.route('/average/:id').get(ratingAverageByMediaIdGet);
 

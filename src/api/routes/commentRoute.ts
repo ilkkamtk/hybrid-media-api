@@ -2,7 +2,7 @@ import express from 'express';
 import {
   commentListGet,
   commentListByMediaIdGet,
-  commentListByUserIdGet,
+  commentListByUserGet,
   commentCountByMediaIdGet,
   commentGet,
   commentPost,
@@ -27,7 +27,7 @@ router
 
 router.route('/bymedia/:id').get(commentListByMediaIdGet);
 
-router.route('/byuser/:id').get(authenticate, commentListByUserIdGet);
+router.route('/byuser').get(authenticate, commentListByUserGet);
 
 router.route('/count/:id').get(commentCountByMediaIdGet);
 

@@ -7,11 +7,20 @@ import {
   likeDelete,
   likeCountByMediaIdGet,
 } from '../controllers/likeController';
-import {authenticate} from '../../middlewares';
+import {authenticate, validationErrors} from '../../middlewares';
+import {body} from 'express-validator';
 
 const router = express.Router();
 
-router.route('/').get(likeListGet).post(authenticate, likePost);
+router
+  .route('/')
+  .get(likeListGet)
+  .post(
+    authenticate,
+    body('media_id').notEmpty().isNumeric(),
+    validationErrors,
+    likePost
+  );
 
 router.route('/bymedia/:id').get(likeListByMediaIdGet);
 
