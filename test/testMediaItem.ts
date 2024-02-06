@@ -1,167 +1,159 @@
 /* eslint-disable node/no-unpublished-import */
+import {MediaItem} from '@sharedTypes/DBTypes';
+import {MessageResponse, UploadResponse} from '@sharedTypes/MessageTypes';
 import request from 'supertest';
-import Category from '../src/interfaces/Category';
-import MessageResponse from '../src/types/MessageResponse';
+import {Application} from 'express';
 
-// functios to test succesful cateory routes
-const getApiRoot = (url: string | Function): Promise<MessageResponse> => {
+const uploadMediaFile = (
+  url: string | Application,
+  path: string,
+  mediaFile: string,
+  token: string
+): Promise<UploadResponse> => {
   return new Promise((resolve, reject) => {
     request(url)
-      .get('/api/v1')
-      .expect(200, {message: 'animals api v1'}, (err, response) => {
+      .post(path)
+      .attach('file', mediaFile)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200, (err, response) => {
         if (err) {
           reject(err);
         } else {
-          resolve(response.body);
+          const message: UploadResponse = response.body;
+          expect(message.message).toBe('file uploaded');
+          expect(message.data?.filename).not.toBe('');
+          expect(message.data?.filesize).toBeGreaterThan(0);
+          expect(message.data?.media_type).not.toBe('');
+          resolve(message);
         }
       });
   });
 };
 
-const getCategories = (url: string | Function): Promise<Category[]> => {
+const getMediaItems = (url: string | Application): Promise<MediaItem[]> => {
   return new Promise((resolve, reject) => {
     request(url)
-      .get('/api/v1/category')
+      .get('/api/v1/media')
       .expect(200, (err, response) => {
         if (err) {
           reject(err);
         } else {
-          const categories: Category[] = response.body;
-          categories.forEach((category) => {
-            expect(category.category_id).toBeGreaterThan(0);
-            expect(category.category_name).not.toBe('');
+          const mediaItems: MediaItem[] = response.body;
+          mediaItems.forEach((mediaItem) => {
+            expect(mediaItem.media_id).toBeGreaterThan(0);
+            expect(mediaItem.title).not.toBe('');
+            expect(mediaItem.media_type).not.toBe('');
+            expect(mediaItem.filename).not.toBe('');
+            expect(mediaItem.thumbnail).not.toBe('');
+            expect(mediaItem.created_at).not.toBe('');
+            expect(mediaItem.filesize).toBeGreaterThan(0);
+            expect(mediaItem.user_id).toBeGreaterThan(0);
           });
-          resolve(categories);
+          resolve(mediaItems);
         }
       });
   });
 };
 
-const getCategory = (url: string | Function, id: number): Promise<Category> => {
+const getMediaItem = (
+  url: string | Application,
+  id: number
+): Promise<MediaItem> => {
   return new Promise((resolve, reject) => {
     request(url)
-      .get(`/api/v1/category/${id}`)
+      .get(`/api/v1/media/${id}`)
       .expect(200, (err, response) => {
         if (err) {
           reject(err);
         } else {
-          const category: Category = response.body;
-          expect(category.category_id).toBeGreaterThan(0);
-          expect(category.category_name).not.toBe('');
-          resolve(category);
+          const mediaItem: MediaItem = response.body;
+          expect(mediaItem.media_id).toBeGreaterThan(0);
+          expect(mediaItem.title).not.toBe('');
+          expect(mediaItem.media_type).not.toBe('');
+          expect(mediaItem.filename).not.toBe('');
+          expect(mediaItem.thumbnail).not.toBe('');
+          expect(mediaItem.created_at).not.toBe('');
+          expect(mediaItem.filesize).toBeGreaterThan(0);
+          expect(mediaItem.user_id).toBeGreaterThan(0);
+          resolve(mediaItem);
         }
       });
   });
 };
 
-const postCategory = (
-  url: string | Function,
-  category_name: string
+const postMediaItem = (
+  url: string | Application,
+  path: string,
+  token: string,
+  mediaItem: Partial<MediaItem>
 ): Promise<MessageResponse> => {
   return new Promise((resolve, reject) => {
     request(url)
-      .post('/api/v1/category')
-      .send({category_name})
+      .post(path)
+      .set('Authorization', `Bearer ${token}`)
+      .send(mediaItem)
       .expect(200, (err, response) => {
         if (err) {
           reject(err);
         } else {
           const message: MessageResponse = response.body;
-          expect(message.message).not.toBe('');
+          expect(message.message).toBe('Media created');
           resolve(message);
         }
       });
   });
 };
 
-const putCategory = (
-  url: string | Function,
+const putMediaItem = (
+  url: string | Application,
   id: number,
-  category_name: string
+  mediaItem: Omit<MediaItem, 'media_id' | 'thumbnail' | 'created_at'>
 ): Promise<MessageResponse> => {
   return new Promise((resolve, reject) => {
     request(url)
-      .put(`/api/v1/category/${id}`)
-      .send({category_name})
+      .put(`/api/v1/media/${id}`)
+      .send(mediaItem)
       .expect(200, (err, response) => {
         if (err) {
           reject(err);
         } else {
           const message: MessageResponse = response.body;
-          expect(message.message).not.toBe('');
+          expect(message.message).toBe('media item updated');
           resolve(message);
         }
       });
   });
 };
 
-const deleteCategory = (
-  url: string | Function,
-  id: number
-): Promise<MessageResponse> => {
-  return new Promise((resolve, reject) => {
-    request(url)
-      .delete(`/api/v1/category/${id}`)
-      .expect(200, (err, response) => {
-        if (err) {
-          reject(err);
-        } else {
-          const message: MessageResponse = response.body;
-          expect(message.message).not.toBe('');
-          resolve(message);
-        }
-      });
-  });
-};
-
-// functions to test not found 404 for category routes
-const getNotFoundCategory = (
-  url: string | Function,
-  id: number
-): Promise<MessageResponse> => {
-  return new Promise((resolve, reject) => {
-    request(url)
-      .get(`/api/v1/category/${id}`)
-      .expect(404, (err, response) => {
-        if (err) {
-          reject(err);
-        } else {
-          const message: MessageResponse = response.body;
-          expect(message.message).not.toBe('');
-          resolve(message);
-        }
-      });
-  });
-};
-
-const putNotFoundCategory = (
-  url: string | Function,
+const deleteMediaItem = (
+  url: string | Application,
   id: number,
-  category_name: string
+  token: string
 ): Promise<MessageResponse> => {
   return new Promise((resolve, reject) => {
     request(url)
-      .put(`/api/v1/category/${id}`)
-      .send({category_name})
-      .expect(404, (err, response) => {
+      .delete(`/api/v1/media/${id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200, (err, response) => {
         if (err) {
           reject(err);
         } else {
           const message: MessageResponse = response.body;
-          expect(message.message).not.toBe('');
+          expect(message.message).toBe('media item deleted');
           resolve(message);
         }
       });
   });
 };
 
-const deleteNotFoundCategory = (
-  url: string | Function,
+// functions to test not found 404 for mediaItem routes
+const getNotFoundMediaItem = (
+  url: string | Application,
   id: number
 ): Promise<MessageResponse> => {
   return new Promise((resolve, reject) => {
     request(url)
-      .delete(`/api/v1/category/${id}`)
+      .get(`/api/v1/media/${id}`)
       .expect(404, (err, response) => {
         if (err) {
           reject(err);
@@ -174,15 +166,55 @@ const deleteNotFoundCategory = (
   });
 };
 
-// functions to test invalid data 400 for category routes
-const postInvalidCategory = (
-  url: string | Function,
-  category_name: string
+const putNotFoundMediaItem = (
+  url: string | Application,
+  id: number,
+  media_name: string
 ): Promise<MessageResponse> => {
   return new Promise((resolve, reject) => {
     request(url)
-      .post('/api/v1/category')
-      .send({category_name})
+      .put(`/api/v1/media/${id}`)
+      .send({media_name})
+      .expect(404, (err, response) => {
+        if (err) {
+          reject(err);
+        } else {
+          const message: MessageResponse = response.body;
+          expect(message.message).not.toBe('');
+          resolve(message);
+        }
+      });
+  });
+};
+
+const deleteNotFoundMediaItem = (
+  url: string | Application,
+  id: number
+): Promise<MessageResponse> => {
+  return new Promise((resolve, reject) => {
+    request(url)
+      .delete(`/api/v1/media/${id}`)
+      .expect(404, (err, response) => {
+        if (err) {
+          reject(err);
+        } else {
+          const message: MessageResponse = response.body;
+          expect(message.message).not.toBe('');
+          resolve(message);
+        }
+      });
+  });
+};
+
+// functions to test invalid data 400 for mediaItem routes
+const postInvalidMediaItem = (
+  url: string | Application,
+  media_name: string
+): Promise<MessageResponse> => {
+  return new Promise((resolve, reject) => {
+    request(url)
+      .post('/api/v1/media')
+      .send({media_name})
       .expect(400, (err, response) => {
         if (err) {
           reject(err);
@@ -195,15 +227,15 @@ const postInvalidCategory = (
   });
 };
 
-const putInvalidCategory = (
-  url: string | Function,
+const putInvalidMediaItem = (
+  url: string | Application,
   id: string,
-  category_name: string
+  media_name: string
 ): Promise<MessageResponse> => {
   return new Promise((resolve, reject) => {
     request(url)
-      .put(`/api/v1/category/${id}`)
-      .send({category_name})
+      .put(`/api/v1/media/${id}`)
+      .send({media_name})
       .expect(400, (err, response) => {
         if (err) {
           reject(err);
@@ -216,13 +248,13 @@ const putInvalidCategory = (
   });
 };
 
-const deleteInvalidCategory = (
-  url: string | Function,
+const deleteInvalidMediaItem = (
+  url: string | Application,
   id: string
 ): Promise<MessageResponse> => {
   return new Promise((resolve, reject) => {
     request(url)
-      .delete(`/api/v1/category/${id}`)
+      .delete(`/api/v1/media/${id}`)
       .expect(400, (err, response) => {
         if (err) {
           reject(err);
@@ -235,13 +267,13 @@ const deleteInvalidCategory = (
   });
 };
 
-const getInvalidCategory = (
-  url: string | Function,
+const getInvalidMediaItem = (
+  url: string | Application,
   id: string
 ): Promise<MessageResponse> => {
   return new Promise((resolve, reject) => {
     request(url)
-      .get(`/api/v1/category/${id}`)
+      .get(`/api/v1/media/${id}`)
       .expect(400, (err, response) => {
         if (err) {
           reject(err);
@@ -255,17 +287,17 @@ const getInvalidCategory = (
 };
 
 export {
-  getApiRoot,
-  getCategories,
-  getCategory,
-  postCategory,
-  putCategory,
-  deleteCategory,
-  getNotFoundCategory,
-  putNotFoundCategory,
-  deleteNotFoundCategory,
-  postInvalidCategory,
-  putInvalidCategory,
-  deleteInvalidCategory,
-  getInvalidCategory,
+  uploadMediaFile,
+  getMediaItems,
+  getMediaItem,
+  postMediaItem,
+  putMediaItem,
+  deleteMediaItem,
+  getNotFoundMediaItem,
+  putNotFoundMediaItem,
+  deleteNotFoundMediaItem,
+  postInvalidMediaItem,
+  putInvalidMediaItem,
+  deleteInvalidMediaItem,
+  getInvalidMediaItem,
 };

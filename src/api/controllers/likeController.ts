@@ -6,9 +6,10 @@ import {
   postLike,
   deleteLike,
   fetchLikesCountByMediaId,
+  fetchLikeByMediaIdAndUserId,
 } from '../models/likeModel';
 import CustomError from '../../classes/CustomError';
-import {MessageResponse} from '@sharedTypes/MessageTypes';
+import {BooleanResponse, MessageResponse} from '@sharedTypes/MessageTypes';
 import {Like, TokenContent} from '@sharedTypes/DBTypes';
 
 // list of likes
@@ -31,12 +32,12 @@ const likeListGet = async (
 
 // list of likes by media item id
 const likeListByMediaIdGet = async (
-  req: Request<{id: string}>,
+  req: Request<{media_id: string}>,
   res: Response<Like[]>,
   next: NextFunction
 ) => {
   try {
-    const likes = await fetchLikesByMediaId(Number(req.params.id));
+    const likes = await fetchLikesByMediaId(Number(req.params.media_id));
     if (likes) {
       res.json(likes);
       return;
@@ -126,6 +127,26 @@ const likeCountByMediaIdGet = async (
   }
 };
 
+const likeByMediaIdAndUserIdGet = async (
+  req: Request<{media_id: string}>,
+  res: Response<Like, {user: TokenContent}>,
+  next: NextFunction
+) => {
+  try {
+    const result = await fetchLikeByMediaIdAndUserId(
+      Number(req.params.media_id),
+      res.locals.user.user_id
+    );
+    if (result) {
+      res.json(result);
+      return;
+    }
+    next(new CustomError('Like not found', 404));
+  } catch (error) {
+    next(error);
+  }
+};
+
 export {
   likeListGet,
   likeListByMediaIdGet,
@@ -133,4 +154,5 @@ export {
   likePost,
   likeDelete,
   likeCountByMediaIdGet,
+  likeByMediaIdAndUserIdGet,
 };

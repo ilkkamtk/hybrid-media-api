@@ -68,6 +68,7 @@ const authenticate = async (
 };
 
 const validationErrors = (req: Request, _res: Response, next: NextFunction) => {
+  console.log(req.body);
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const messages: string = errors

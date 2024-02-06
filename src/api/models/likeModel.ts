@@ -1,7 +1,7 @@
 import {ResultSetHeader, RowDataPacket} from 'mysql2';
 import {Like, UserLevel} from '@sharedTypes/DBTypes';
 import promisePool from '../../lib/db';
-import {MessageResponse} from '@sharedTypes/MessageTypes';
+import {BooleanResponse, MessageResponse} from '@sharedTypes/MessageTypes';
 
 // Request a list of likes
 const fetchAllLikes = async (): Promise<Like[] | null> => {
@@ -132,6 +132,25 @@ const deleteLike = async (
   }
 };
 
+const fetchLikeByMediaIdAndUserId = async (
+  media_id: number,
+  user_id: number
+): Promise<Like> => {
+  try {
+    const [rows] = await promisePool.execute<RowDataPacket[] & Like[]>(
+      'SELECT * FROM Likes WHERE media_id = ? AND user_id = ?',
+      [media_id, user_id]
+    );
+    if (rows.length === 0) {
+      throw new Error('Like not found');
+    }
+    return rows[0];
+  } catch (e) {
+    console.error('fetchLikeByMediaIdAndUserId error', (e as Error).message);
+    throw new Error((e as Error).message);
+  }
+};
+
 export {
   fetchAllLikes,
   fetchLikesByMediaId,
@@ -139,4 +158,5 @@ export {
   postLike,
   deleteLike,
   fetchLikesCountByMediaId,
+  fetchLikeByMediaIdAndUserId,
 };
