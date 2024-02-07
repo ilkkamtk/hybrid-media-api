@@ -9,7 +9,7 @@ import {
   fetchLikeByMediaIdAndUserId,
 } from '../models/likeModel';
 import CustomError from '../../classes/CustomError';
-import {BooleanResponse, MessageResponse} from '@sharedTypes/MessageTypes';
+import {MessageResponse} from '@sharedTypes/MessageTypes';
 import {Like, TokenContent} from '@sharedTypes/DBTypes';
 
 // list of likes

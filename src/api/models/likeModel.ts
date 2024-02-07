@@ -1,7 +1,7 @@
 import {ResultSetHeader, RowDataPacket} from 'mysql2';
 import {Like, UserLevel} from '@sharedTypes/DBTypes';
 import promisePool from '../../lib/db';
-import {BooleanResponse, MessageResponse} from '@sharedTypes/MessageTypes';
+import {MessageResponse} from '@sharedTypes/MessageTypes';
 
 // Request a list of likes
 const fetchAllLikes = async (): Promise<Like[] | null> => {
