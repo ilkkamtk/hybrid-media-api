@@ -1,5 +1,5 @@
 require('dotenv').config();
-import express, {Request, Response} from 'express';
+import express from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
@@ -14,11 +14,8 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req: Request, res: Response) => {
-  res.json({
-    message: 'API location: api/v1',
-  });
-});
+// serve public folder for apidoc
+app.use(express.static('public'));
 
 app.use('/api/v1', api);
 
