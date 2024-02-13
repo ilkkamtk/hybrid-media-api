@@ -75,7 +75,6 @@
  * @apiSuccess {String} title Title of the media.
  * @apiSuccess {String} description Description of the media.
  * @apiSuccess {String} created_at Timestamp when the media was created.
- * @apiSuccess {String} app_id ID of the app where the media was posted.
  * @apiSuccess {String} thumbnail Thumbnail of the media.
  *
  * @apiSuccessExample Success-Response:
@@ -89,7 +88,6 @@
  *       "title": "Example Title",
  *       "description": "Example Description",
  *       "created_at": "2024-01-26T09:38:08.000Z",
- *       "app_id": "exampleAppId",
  *       "thumbnail": "http://localhost:3002/uploads/example-thumb.jpg"
  *     }
  *
@@ -118,7 +116,6 @@
  * @apiSuccess {String} media.title Title of the media.
  * @apiSuccess {String} media.description Description of the media.
  * @apiSuccess {String} media.created_at Timestamp when the media was created.
- * @apiSuccess {String} media.app_id ID of the app where the media was posted.
  * @apiSuccess {String} media.thumbnail Thumbnail of the media.
  *
  * @apiSuccessExample Success-Response:
@@ -133,7 +130,6 @@
  *         "title": "Example Title",
  *         "description": "Example Description",
  *         "created_at": "2024-01-26T09:38:08.000Z",
- *         "app_id": "exampleAppId",
  *         "thumbnail": "http://localhost:3002/uploads/example-thumb.jpg"
  *       },
  *       ...
@@ -163,7 +159,6 @@
  * @apiSuccess {String} media.title Title of the media.
  * @apiSuccess {String} media.description Description of the media.
  * @apiSuccess {String} media.created_at Timestamp when the media was created.
- * @apiSuccess {String} media.app_id ID of the app where the media was posted.
  * @apiSuccess {String} media.thumbnail Thumbnail of the media.
  *
  * @apiSuccessExample Success-Response:
@@ -178,7 +173,6 @@
  *         "title": "Example Title",
  *         "description": "Example Description",
  *         "created_at": "2024-01-26T09:38:08.000Z",
- *         "app_id": "exampleAppId",
  *         "thumbnail": "http://localhost:3002/uploads/example-thumb.jpg"
  *       },
  *       ...
@@ -208,7 +202,6 @@
  * @apiSuccess {String} media.title Title of the media.
  * @apiSuccess {String} media.description Description of the media.
  * @apiSuccess {String} media.created_at Timestamp when the media was created.
- * @apiSuccess {String} media.app_id ID of the app where the media was posted.
  * @apiSuccess {String} media.thumbnail Thumbnail of the media.
  *
  * @apiSuccessExample Success-Response:
@@ -223,7 +216,6 @@
  *         "title": "Example Title",
  *         "description": "Example Description",
  *         "created_at": "2024-01-26T09:38:08.000Z",
- *         "app_id": "exampleAppId",
  *         "thumbnail": "http://localhost:3002/uploads/example-thumb.jpg"
  *       },
  *       ...
@@ -255,7 +247,6 @@
  * @apiSuccess {String} media.title Title of the media.
  * @apiSuccess {String} media.description Description of the media.
  * @apiSuccess {String} media.created_at Timestamp when the media was created.
- * @apiSuccess {String} media.app_id ID of the app where the media was posted.
  * @apiSuccess {String} media.thumbnail Thumbnail of the media.
  *
  * @apiSuccessExample Success-Response:
@@ -270,7 +261,6 @@
  *         "title": "Example Title",
  *         "description": "Example Description",
  *         "created_at": "2024-01-26T09:38:08.000Z",
- *         "app_id": "exampleAppId",
  *         "thumbnail": "http://localhost:3002/uploads/example-thumb.jpg"
  *       },
  *       ...
@@ -311,7 +301,6 @@
  * @apiSuccess {String} media.title Title of the media.
  * @apiSuccess {String} media.description Description of the media.
  * @apiSuccess {String} media.created_at Timestamp when the media was created.
- * @apiSuccess {String} media.app_id ID of the app where the media was posted.
  * @apiSuccess {String} media.thumbnail Thumbnail of the media.
  *
  * @apiSuccessExample Success-Response:
@@ -325,7 +314,6 @@
  *       "title": "Updated Title",
  *       "description": "Updated Description",
  *       "created_at": "2024-01-26T09:38:08.000Z",
- *       "app_id": "exampleAppId",
  *       "thumbnail": "http://localhost:3002/uploads/example-thumb.jpg"
  *     }
  *
