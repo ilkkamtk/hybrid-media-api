@@ -1,5 +1,5 @@
 /**
- * @api {get} /comment Get Comments
+ * @api {get} /comments Get Comments
  * @apiName GetComments
  * @apiGroup Comment
  *
@@ -32,7 +32,7 @@
  *     }
  */
 /**
- * @api {post} /comment Post Comment
+ * @api {post} /comments Post Comment
  * @apiName PostComment
  * @apiGroup Comment
  *
@@ -42,7 +42,7 @@
  * @apiParam {Number} media_id ID of the media.
  *
  * @apiExample {json} Request-Example:
- *     POST /comment
+ *     POST /comments
  *     {
  *       "comment_text": "This is a comment",
  *       "media_id": 1
@@ -78,7 +78,7 @@
  *     }
  */
 /**
- * @api {get} /comment/bymedia/:id Get Comments by Media ID
+ * @api {get} /comments/bymedia/:id Get Comments by Media ID
  * @apiName GetCommentsByMediaId
  * @apiGroup Comment
  *
@@ -113,7 +113,7 @@
  *     }
  */
 /**
- * @api {get} /comment/byuser Get Comments by User Token
+ * @api {get} /comments/byuser Get Comments by User Token
  * @apiName GetCommentsByUserToken
  * @apiGroup Comment
  *
@@ -144,7 +144,7 @@
  *     }
  */
 /**
- * @api {get} /comment/count/:id Get Comment Count by Media ID
+ * @api {get} /comments/count/:id Get Comment Count by Media ID
  * @apiName GetCommentCountByMediaId
  * @apiGroup Comment
  *
@@ -167,7 +167,7 @@
  *     }
  */
 /**
- * @api {get} /comment/:id Get Comment by ID
+ * @api {get} /comments/:id Get Comment by ID
  * @apiName GetCommentById
  * @apiGroup Comment
  *
@@ -198,7 +198,7 @@
  *     }
  */
 /**
- * @api {put} /comment Update Comment
+ * @api {put} /comments Update Comment
  * @apiName UpdateComment
  * @apiGroup Comment
  *
@@ -207,7 +207,7 @@
  * @apiParam {String} comment_text Text of the comment.
  *
  * @apiExample {json} Request-Example:
- *     PUT /comment
+ *     PUT /comments
  *     {
  *       "comment_text": "This is an updated comment"
  *     }
@@ -237,7 +237,7 @@
  *     }
  */
 /**
- * @api {delete} /comment Delete Comment
+ * @api {delete} /comments Delete Comment
  * @apiName DeleteComment
  * @apiGroup Comment
  *
