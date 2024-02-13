@@ -230,7 +230,7 @@
  *     }
  */
 /**
- * @api {get} /media Get Media
+ * @api {get} /media/:id Get Media
  * @apiName GetMedia
  * @apiGroup Media
  *
