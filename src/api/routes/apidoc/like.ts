@@ -175,3 +175,40 @@
  *       "message": "Like not deleted"
  *     }
  */
+/**
+ * @api {get} /like/bymedia/user/:media_id Get Likes by Media ID and User ID
+ * @apiName GetLikesByMediaIdAndUserId
+ * @apiGroup Like
+ *
+ * @apiHeader {String} Authorization Bearer token for authentication.
+ *
+ * @apiParam {Number} media_id Media's unique ID.
+ *
+ * @apiExample {json} Request-Example:
+ *     GET /like/bymedia/user/1
+ *
+ * @apiSuccess {Object[]} likes List of Likes.
+ * @apiSuccess {Number} likes.id Like's ID.
+ * @apiSuccess {Number} likes.media_id Media's ID.
+ * @apiSuccess {Number} likes.user_id User's ID.
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "likes": [
+ *         {
+ *           "id": 1,
+ *           "media_id": 1,
+ *           "user_id": 1
+ *         }
+ *       ]
+ *     }
+ *
+ * @apiError LikesNotFound No likes were found.
+ *
+ * @apiErrorExample {json} Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "message": "No likes found"
+ *     }
+ */
