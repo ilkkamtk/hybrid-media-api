@@ -79,8 +79,7 @@ const fetchRatingsByUserId = async (
 const postRating = async (
   media_id: number,
   user_id: number,
-  rating_value: number,
-  level_name: UserLevel['level_name']
+  rating_value: number
 ): Promise<MessageResponse | null> => {
   // Start transaction
   const connection = await promisePool.getConnection();

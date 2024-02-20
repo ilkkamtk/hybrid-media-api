@@ -75,8 +75,7 @@ const ratingPost = async (
     const result = await postRating(
       Number(req.body.rating_value),
       res.locals.user.user_id,
-      Number(req.body.media_id),
-      res.locals.user.level_name
+      Number(req.body.media_id)
     );
     if (result) {
       res.json(result);
