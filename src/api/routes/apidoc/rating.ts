@@ -1,5 +1,5 @@
 /**
- * @api {get} /rating Request Rating List
+ * @api {get} /ratings Request Rating List
  * @apiName GetRatingList
  * @apiGroup Rating
  *
@@ -30,7 +30,7 @@
  *     }
  */
 /**
- * @api {get} /rating/bymedia/:id Request Rating List by Media ID
+ * @api {get} /ratings/bymedia/:id Request Rating List by Media ID
  * @apiName GetRatingListByMediaId
  * @apiGroup Rating
  *
@@ -64,11 +64,11 @@
  *     }
  */
 /**
- * @api {get} /rating/byuser/:id Request Rating List by User ID
- * @apiName GetRatingListByUserId
+ * @api {get} /ratings/byuser Request Rating List by User Token
+ * @apiName GetRatingListByUserToken
  * @apiGroup Rating
  *
- * @apiParam {Number} id User's unique ID.
+ * @apiHeader {String} Authorization Bearer token for authentication.
  *
  * @apiSuccess {Object[]} ratings List of Ratings.
  * @apiSuccess {Number} ratings.rating_id ID of the Rating.
@@ -89,7 +89,7 @@
  *       }
  *     ]
  *
- * @apiError NoRatingsFound No ratings found for the specified user ID.
+ * @apiError NoRatingsFound No ratings found for the specified user.
  *
  * @apiErrorExample Error-Response:
  *     HTTP/1.1 404 Not Found
@@ -98,7 +98,7 @@
  *     }
  */
 /**
- * @api {get} /rating/average/:id Request Average Rating by Media ID
+ * @api {get} /ratings/average/:id Request Average Rating by Media ID
  * @apiName GetAverageRatingByMediaId
  * @apiGroup Rating
  *
@@ -121,7 +121,7 @@
  *     }
  */
 /**
- * @api {delete} /rating/:id Delete Rating
+ * @api {delete} /ratings/:id Delete Rating
  * @apiName DeleteRating
  * @apiGroup Rating
  *
@@ -146,7 +146,7 @@
  *     }
  */
 /**
- * @api {post} /rating Post Rating
+ * @api {post} /ratings Post Rating
  * @apiName PostRating
  * @apiGroup Rating
  *

@@ -2,7 +2,7 @@ import express from 'express';
 import {
   ratingListGet,
   ratingListByMediaIdGet,
-  ratingListByUserIdGet,
+  ratingListByUserGet,
   ratingPost,
   ratingDelete,
   ratingAverageByMediaIdGet,
@@ -24,7 +24,7 @@ router
 
 router.route('/bymedia/:id').get(ratingListByMediaIdGet);
 
-router.route('/byuser/:id').get(ratingListByUserIdGet);
+router.route('/byuser').get(ratingListByUserGet);
 
 router.route('/average/:id').get(ratingAverageByMediaIdGet);
 

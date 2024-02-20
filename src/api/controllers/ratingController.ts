@@ -48,13 +48,13 @@ const ratingListByMediaIdGet = async (
 };
 
 // list of ratings by user id
-const ratingListByUserIdGet = async (
-  req: Request<{id: string}>,
-  res: Response<Rating[]>,
+const ratingListByUserGet = async (
+  req: Request,
+  res: Response<Rating[], {user: TokenContent}>,
   next: NextFunction
 ) => {
   try {
-    const ratings = await fetchRatingsByUserId(Number(req.params.id));
+    const ratings = await fetchRatingsByUserId(Number(res.locals.user.user_id));
     if (ratings) {
       res.json(ratings);
       return;
@@ -130,7 +130,7 @@ const ratingAverageByMediaIdGet = async (
 export {
   ratingListGet,
   ratingListByMediaIdGet,
-  ratingListByUserIdGet,
+  ratingListByUserGet,
   ratingPost,
   ratingDelete,
   ratingAverageByMediaIdGet,
