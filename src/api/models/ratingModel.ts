@@ -82,38 +82,58 @@ const postRating = async (
   rating_value: number,
   level_name: UserLevel['level_name']
 ): Promise<MessageResponse | null> => {
+  // Start transaction
+  const connection = await promisePool.getConnection();
   try {
-    // check if rating already exists, if so delete it because of foreign key constraints
-    const [ratingExists] = await promisePool.execute<
-      RowDataPacket[] & Rating[]
-    >('SELECT * FROM Ratings WHERE media_id = ? AND user_id = ?', [
-      media_id,
-      user_id,
-    ]);
+    await connection.beginTransaction();
 
+    // Check if rating already exists
+    const [ratingExists] = await connection.execute<RowDataPacket[] & Rating[]>(
+      'SELECT * FROM Ratings WHERE media_id = ? AND user_id = ?',
+      [media_id, user_id]
+    );
+
+    // If rating exists, delete it
     if (ratingExists.length > 0) {
       await deleteRating(ratingExists[0].rating_id, user_id, level_name);
     }
 
-    const [ratingResult] = await promisePool.execute<ResultSetHeader>(
+    // Insert new rating
+    const [ratingResult] = await connection.execute<ResultSetHeader>(
       'INSERT INTO Ratings (media_id, user_id, rating_value) VALUES (?, ?, ?)',
       [media_id, user_id, rating_value]
     );
+
+    // If no rows were affected, rollback and return null
     if (ratingResult.affectedRows === 0) {
+      await connection.rollback();
       return null;
     }
 
-    const [rows] = await promisePool.execute<RowDataPacket[] & Rating[]>(
+    // Get the inserted rating
+    const [rows] = await connection.execute<RowDataPacket[] & Rating[]>(
       'SELECT * FROM Ratings WHERE rating_id = ?',
       [ratingResult.insertId]
     );
+
+    // If no rows were returned, rollback and return null
     if (rows.length === 0) {
+      await connection.rollback();
       return null;
     }
+
+    // If everything went well, commit the transaction
+    await connection.commit();
+
     return {message: 'Rating added'};
   } catch (e) {
+    // If there was an error, rollback the transaction
+    await connection.rollback();
     console.error('postRating error', (e as Error).message);
     throw new Error((e as Error).message);
+  } finally {
+    // Release the connection
+    connection.release();
   }
 };
 
