@@ -95,7 +95,14 @@ const postRating = async (
 
     // If rating exists, delete it
     if (ratingExists.length > 0) {
-      await deleteRating(ratingExists[0].rating_id, user_id, level_name);
+      const [deleteResult] = await connection.execute<ResultSetHeader>(
+        'DELETE FROM Ratings WHERE rating_id = ? AND user_id = ?',
+        [ratingExists[0].rating_id, user_id]
+      );
+      if (deleteResult.affectedRows === 0) {
+        await connection.rollback();
+        return null;
+      }
     }
 
     // Insert new rating if rating > 0
