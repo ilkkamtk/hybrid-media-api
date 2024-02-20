@@ -89,7 +89,7 @@ const postRating = async (
 
     // Check if rating already exists
     const [ratingExists] = await connection.execute<RowDataPacket[] & Rating[]>(
-      'SELECT * FROM Ratings WHERE media_id = ? AND user_id = ?',
+      'SELECT * FROM Ratings WHERE media_id = ? AND user_id = ? FOR UPDATE',
       [media_id, user_id]
     );
 
@@ -98,7 +98,11 @@ const postRating = async (
       await deleteRating(ratingExists[0].rating_id, user_id, level_name);
     }
 
-    // Insert new rating
+    // Insert new rating if rating > 0
+    if (rating_value === 0) {
+      await connection.commit();
+      return {message: 'Rating deleted'};
+    }
     const [ratingResult] = await connection.execute<ResultSetHeader>(
       'INSERT INTO Ratings (media_id, user_id, rating_value) VALUES (?, ?, ?)',
       [media_id, user_id, rating_value]
