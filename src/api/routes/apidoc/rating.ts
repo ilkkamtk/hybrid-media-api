@@ -104,12 +104,12 @@
  *
  * @apiParam {Number} id Media's unique ID.
  *
- * @apiSuccess {Number} average_rating Average rating of the Media.
+ * @apiSuccess {Number} average Average rating of the Media.
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
- *       "average_rating": 4.5
+ *       "average": 4.5
  *     }
  *
  * @apiError NoRatingsFound No ratings found for the specified media ID.
