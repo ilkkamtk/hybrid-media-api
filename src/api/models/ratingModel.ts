@@ -58,12 +58,12 @@ const fetchAverageRatingByMediaId = async (
 
 // Request a list of ratings by user id
 const fetchRatingsByUserId = async (
-  media_id: number
+  user_id: number
 ): Promise<Rating[] | null> => {
   try {
     const [rows] = await promisePool.execute<RowDataPacket[] & Rating[]>(
       'SELECT * FROM Ratings WHERE user_id = ?',
-      [media_id]
+      [user_id]
     );
     if (rows.length === 0) {
       return null;
