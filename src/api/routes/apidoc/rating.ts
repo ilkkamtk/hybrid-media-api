@@ -152,7 +152,7 @@
  *
  * @apiHeader {String} Authorization Bearer token for authentication.
  *
- * @apiParam {Number} rating_value Rating value, must be an integer between 1 and 5.
+ * @apiParam {Number} rating_value Rating value, can be an float between 0 and 5. 0 deletes the rating.
  * @apiParam {Number} media_id Media's unique ID.
  *
  * @apiExample {json} Request-Example:
