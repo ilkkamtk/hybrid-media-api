@@ -89,7 +89,7 @@ const postRating = async (
 
     // Check if rating already exists
     const [ratingExists] = await connection.execute<RowDataPacket[] & Rating[]>(
-      'SELECT * FROM Ratings WHERE media_id = ? AND user_id = ?',
+      'SELECT * FROM Ratings WHERE media_id = ? AND user_id = ? FOR UPDATE',
       [media_id, user_id]
     );
 
