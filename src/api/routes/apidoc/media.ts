@@ -16,24 +16,24 @@
  *         {
  *             "media_id": 73,
  *             "user_id": 7,
- *             "filename": "http://localhost:3002/uploads/example.png",
+ *             "filename": "//localhost:3002/uploads/example.png",
  *             "filesize": 1256723,
  *             "media_type": "image/png",
  *             "title": "Example Title",
  *             "description": "Example Description",
  *             "created_at": "2024-01-26T09:38:08.000Z",
- *             "thumbnail": "http://localhost:3002/uploads/example-thumb.png"
+ *             "thumbnail": "//localhost:3002/uploads/example-thumb.png"
  *         },
  *         {
  *             "media_id": 74,
  *             "user_id": 7,
- *             "filename": "http://localhost:3002/uploads/example.jpg",
+ *             "filename": "//localhost:3002/uploads/example.jpg",
  *             "filesize": 1642268,
  *             "media_type": "image/jpeg",
  *             "title": "Another Title",
  *             "description": "Another Description",
  *             "created_at": "2024-01-26T09:40:34.000Z",
- *             "thumbnail": "http://localhost:3002/uploads/example-thumb.jpg"
+ *             "thumbnail": "//localhost:3002/uploads/example-thumb.jpg"
  *         }
  *     ]
  *
@@ -88,7 +88,7 @@
  *       "title": "Example Title",
  *       "description": "Example Description",
  *       "created_at": "2024-01-26T09:38:08.000Z",
- *       "thumbnail": "http://localhost:3002/uploads/example-thumb.jpg"
+ *       "thumbnail": "//localhost:3002/uploads/example-thumb.jpg"
  *     }
  *
  * @apiError MediaNotCreated Media not created.
@@ -130,7 +130,7 @@
  *         "title": "Example Title",
  *         "description": "Example Description",
  *         "created_at": "2024-01-26T09:38:08.000Z",
- *         "thumbnail": "http://localhost:3002/uploads/example-thumb.jpg"
+ *         "thumbnail": "//localhost:3002/uploads/example-thumb.jpg"
  *       },
  *       ...
  *     ]
@@ -173,7 +173,7 @@
  *         "title": "Example Title",
  *         "description": "Example Description",
  *         "created_at": "2024-01-26T09:38:08.000Z",
- *         "thumbnail": "http://localhost:3002/uploads/example-thumb.jpg"
+ *         "thumbnail": "//localhost:3002/uploads/example-thumb.jpg"
  *       },
  *       ...
  *     ]
@@ -216,7 +216,7 @@
  *         "title": "Example Title",
  *         "description": "Example Description",
  *         "created_at": "2024-01-26T09:38:08.000Z",
- *         "thumbnail": "http://localhost:3002/uploads/example-thumb.jpg"
+ *         "thumbnail": "//localhost:3002/uploads/example-thumb.jpg"
  *       },
  *       ...
  *     ]
@@ -261,7 +261,7 @@
  *         "title": "Example Title",
  *         "description": "Example Description",
  *         "created_at": "2024-01-26T09:38:08.000Z",
- *         "thumbnail": "http://localhost:3002/uploads/example-thumb.jpg"
+ *         "thumbnail": "//localhost:3002/uploads/example-thumb.jpg"
  *       },
  *       ...
  *     ]
@@ -314,7 +314,7 @@
  *       "title": "Updated Title",
  *       "description": "Updated Description",
  *       "created_at": "2024-01-26T09:38:08.000Z",
- *       "thumbnail": "http://localhost:3002/uploads/example-thumb.jpg"
+ *       "thumbnail": "//localhost:3002/uploads/example-thumb.jpg"
  *     }
  *
  * @apiError MediaNotFound The media item was not found.
