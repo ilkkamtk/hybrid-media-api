@@ -72,7 +72,7 @@ const mediaPost = async (
     console.log(res.locals.soketti);
     const newMedia = await postMedia(req.body);
     if (newMedia) {
-      res.locals.soketti.emit('addMedia', 'New media added');
+      // res.locals.soketti.emit('addMedia', 'New media added');
       res.json({message: 'Media created', media: newMedia});
       return;
     }
