@@ -12,11 +12,6 @@ import {
 import CustomError from '../../classes/CustomError';
 import {MediaResponse, MessageResponse} from '@sharedTypes/MessageTypes';
 import {MediaItem, TokenContent} from '@sharedTypes/DBTypes';
-import {Socket} from 'socket.io';
-import {
-  ClientToServerEvents,
-  ServerToClientEvents,
-} from '../../types/LocalTypes';
 
 const mediaListGet = async (
   req: Request,
@@ -61,7 +56,6 @@ const mediaPost = async (
     MediaResponse,
     {
       user: TokenContent;
-      soketti: Socket<ClientToServerEvents, ServerToClientEvents>;
     }
   >,
   next: NextFunction
@@ -69,10 +63,8 @@ const mediaPost = async (
   try {
     // add user_id to media object from token
     req.body.user_id = res.locals.user.user_id;
-    console.log(res.locals.soketti);
     const newMedia = await postMedia(req.body);
     if (newMedia) {
-      // res.locals.soketti.emit('addMedia', 'New media added');
       res.json({message: 'Media created', media: newMedia});
       return;
     }

@@ -9,6 +9,9 @@ import {Server, Socket} from 'socket.io';
 import {notFound, errorHandler} from './middlewares';
 import api from './api';
 import {ClientToServerEvents, ServerToClientEvents} from './types/LocalTypes';
+import promisePool from './lib/db';
+import {MediaItem} from '@sharedTypes/DBTypes';
+import {RowDataPacket} from 'mysql2';
 
 const app = express();
 
@@ -33,21 +36,24 @@ const io = new Server<ClientToServerEvents, ServerToClientEvents>(httpServer, {
   },
 });
 
-let soketti: Socket<ClientToServerEvents, ServerToClientEvents> | null = null;
-
 io.on('connection', (socket) => {
   console.log(`${socket.id} user just connected`);
-  soketti = socket;
   socket.on('disconnect', () => {
     console.log('user just disconnected');
   });
-});
+  let lastRowCount = 0;
 
-app.use((_req, res, next) => {
-  res.locals.io = io;
-  res.locals.soketti = soketti;
-  console.log('lokaalit', res.locals.io, res.locals.soketti);
-  next();
+  setInterval(async () => {
+    const [rows] = await promisePool.execute<MediaItem[] & RowDataPacket[]>(
+      'SELECT COUNT(*) as count FROM MediaItem'
+    );
+    const currentRowCount = rows[0].count;
+
+    if (currentRowCount !== lastRowCount) {
+      socket.broadcast.emit('addMedia', 'New media added');
+      lastRowCount = currentRowCount;
+    }
+  }, 5000); // Poll every 5 seconds
 });
 
 // serve public folder for apidoc
