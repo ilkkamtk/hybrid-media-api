@@ -69,7 +69,7 @@ const mediaPost = async (
   try {
     // add user_id to media object from token
     req.body.user_id = res.locals.user.user_id;
-    console.log(req.body);
+    console.log(res.locals.soketti);
     const newMedia = await postMedia(req.body);
     if (newMedia) {
       res.locals.soketti.emit('addMedia', 'New media added');
