@@ -46,6 +46,7 @@ io.on('connection', (socket) => {
 app.use((_req, res, next) => {
   res.locals.io = io;
   res.locals.soketti = soketti;
+  console.log('lokaalit', res.locals.io, res.locals.soketti);
   next();
 });
 
