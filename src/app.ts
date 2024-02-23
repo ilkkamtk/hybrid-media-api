@@ -36,24 +36,25 @@ const io = new Server<ClientToServerEvents, ServerToClientEvents>(httpServer, {
   },
 });
 
+let lastRowCount = 0;
+
+setInterval(async () => {
+  const [rows] = await promisePool.execute<MediaItem[] & RowDataPacket[]>(
+    'SELECT COUNT(*) as count FROM MediaItems'
+  );
+  const currentRowCount = rows[0].count;
+  console.log('interval', currentRowCount, lastRowCount);
+  if (currentRowCount !== lastRowCount) {
+    io.emit('addMedia', 'media added or deleted'); // Emit to all connected sockets
+    lastRowCount = currentRowCount;
+  }
+}, 5000); // Poll every 5 seconds
+
 io.on('connection', (socket) => {
   console.log(`${socket.id} user just connected`);
   socket.on('disconnect', () => {
     console.log('user just disconnected');
   });
-  let lastRowCount = 0;
-
-  setInterval(async () => {
-    const [rows] = await promisePool.execute<MediaItem[] & RowDataPacket[]>(
-      'SELECT COUNT(*) as count FROM MediaItem'
-    );
-    const currentRowCount = rows[0].count;
-
-    if (currentRowCount !== lastRowCount) {
-      socket.broadcast.emit('addMedia', 'New media added');
-      lastRowCount = currentRowCount;
-    }
-  }, 5000); // Poll every 5 seconds
 });
 
 // serve public folder for apidoc
