@@ -12,6 +12,11 @@ import {
 import CustomError from '../../classes/CustomError';
 import {MediaResponse, MessageResponse} from '@sharedTypes/MessageTypes';
 import {MediaItem, TokenContent} from '@sharedTypes/DBTypes';
+import {Socket} from 'socket.io';
+import {
+  ClientToServerEvents,
+  ServerToClientEvents,
+} from '../../types/LocalTypes';
 
 const mediaListGet = async (
   req: Request,
@@ -52,7 +57,13 @@ const mediaGet = async (
 
 const mediaPost = async (
   req: Request<{}, {}, Omit<MediaItem, 'media_id' | 'created_at'>>,
-  res: Response<MediaResponse, {user: TokenContent}>,
+  res: Response<
+    MediaResponse,
+    {
+      user: TokenContent;
+      soketti: Socket<ClientToServerEvents, ServerToClientEvents>;
+    }
+  >,
   next: NextFunction
 ) => {
   try {
@@ -61,6 +72,7 @@ const mediaPost = async (
     console.log(req.body);
     const newMedia = await postMedia(req.body);
     if (newMedia) {
+      res.locals.soketti.emit('addMedia', 'New media added');
       res.json({message: 'Media created', media: newMedia});
       return;
     }
