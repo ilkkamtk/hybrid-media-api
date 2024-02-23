@@ -28,7 +28,7 @@ app.use(cors());
 app.use(express.json());
 
 // socket.io test
-const httpServer = createServer(app).listen(8004);
+const httpServer = createServer(app).listen(process.env.SOCKET_PORT || 3004);
 
 const io = new Server<ClientToServerEvents, ServerToClientEvents>(httpServer, {
   cors: {
