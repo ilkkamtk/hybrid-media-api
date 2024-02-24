@@ -3,12 +3,9 @@ import express from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
-import {createServer} from 'http';
-import {Server, Socket} from 'socket.io';
 
 import {notFound, errorHandler} from './middlewares';
 import api from './api';
-import {ClientToServerEvents, ServerToClientEvents} from './types/LocalTypes';
 import promisePool from './lib/db';
 import {MediaItem} from '@sharedTypes/DBTypes';
 import {RowDataPacket} from 'mysql2';
