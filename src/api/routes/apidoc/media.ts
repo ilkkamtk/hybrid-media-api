@@ -1,14 +1,20 @@
 /**
- * @api {get} /media Get Media List
+ * @api {get} /media?page=1?limit=8 Get Media List
  * @apiName GetMediaList
  * @apiGroup Media
  *
- * @apiHeader {String} Authorization Bearer token for authentication.
+ * @apiParam {Number} [page=1] Page number.
+ * @apiParam {Number} [limit=8] Number of items per page.
  *
  * @apiSuccess {Object[]} media_list List of media items.
  * @apiSuccess {Number} media_list.id Media's unique ID.
  * @apiSuccess {String} media_list.filename Media's filename.
  * @apiSuccess {Number} media_list.filesize Media's filesize.
+ * @apiSuccess {String} media_list.media_type Media's type.
+ * @apiSuccess {String} media_list.title Media's title.
+ * @apiSuccess {String} media_list.description Media's description.
+ * @apiSuccess {String} media_list.created_at Media's creation date.
+ * @apiSuccess {String} media_list.thumbnail Media's thumbnail.
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
