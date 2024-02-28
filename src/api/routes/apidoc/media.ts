@@ -7,7 +7,8 @@
  * @apiParam {Number} [limit=10] Number of items per page.
  *
  * @apiSuccess {Object[]} media_list List of media items.
- * @apiSuccess {Number} media_list.id Media's unique ID.
+ * @apiSuccess {Number} media_list.media_id Media's unique ID.
+ * @apiSuccess {Number} media_list.user_id User's unique ID.
  * @apiSuccess {String} media_list.filename Media's filename.
  * @apiSuccess {Number} media_list.filesize Media's filesize.
  * @apiSuccess {String} media_list.media_type Media's type.
