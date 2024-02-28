@@ -15,15 +15,21 @@ const fetchAllMedia = async (
       sort = 'created_at';
     }
     const offset = (page || 0) * (num || 10);
-    const [rows] = await promisePool.execute<RowDataPacket[] & MediaItem[]>(
+    const sql = promisePool.format(
       `SELECT *,
-      CONCAT(?, filename) AS filename,
-      CONCAT(?, CONCAT(filename, "-thumb.png")) AS thumbnail
-      FROM MediaItems
-      ORDER BY ? DESC
-      ${num && page && 'LIMIT ? OFFSET ?'}`,
+                CONCAT(?, filename) AS filename,
+                CONCAT(?, CONCAT(filename, "-thumb.png")) AS thumbnail
+                FROM MediaItems
+                ORDER BY ? DESC
+                ${num && page && 'LIMIT ? OFFSET ?'}`,
       [uploadPath, uploadPath, sort, num, offset]
     );
+
+    console.log('sql', sql);
+    const [rows] = await promisePool.execute<RowDataPacket[] & MediaItem[]>(
+      sql
+    );
+
     if (rows.length === 0) {
       return null;
     }
