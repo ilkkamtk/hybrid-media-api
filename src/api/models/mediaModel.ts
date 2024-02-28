@@ -14,7 +14,8 @@ const fetchAllMedia = async (
     if (sort !== 'created_at' && sort !== 'title') {
       sort = 'created_at';
     }
-    const offset = (page || 0) * (limit || 10);
+    limit = limit || 10;
+    const offset = (page || 0) * limit;
     const sql = promisePool.format(
       `SELECT *,
                 CONCAT(?, filename) AS filename,
