@@ -4,15 +4,25 @@ import promisePool from '../../lib/db';
 import {fetchData} from '../../lib/functions';
 import {MessageResponse} from '@sharedTypes/MessageTypes';
 
-const fetchAllMedia = async (): Promise<MediaItem[] | null> => {
+const fetchAllMedia = async (
+  page: number | undefined,
+  num: number | undefined,
+  sort: string | undefined
+): Promise<MediaItem[] | null> => {
   const uploadPath = process.env.UPLOAD_URL;
   try {
+    if (sort !== 'created_at' && sort !== 'title') {
+      sort = 'created_at';
+    }
+    const offset = (page || 0) * (num || 10);
     const [rows] = await promisePool.execute<RowDataPacket[] & MediaItem[]>(
       `SELECT *,
       CONCAT(?, filename) AS filename,
       CONCAT(?, CONCAT(filename, "-thumb.png")) AS thumbnail
-      FROM MediaItems`,
-      [uploadPath, uploadPath]
+      FROM MediaItems
+      ORDER BY ? DESC
+      ${num && page && 'LIMIT ? OFFSET ?'}`,
+      [uploadPath, uploadPath, sort, num, offset]
     );
     if (rows.length === 0) {
       return null;
