@@ -5,9 +5,9 @@ import {fetchData} from '../../lib/functions';
 import {MessageResponse} from '@sharedTypes/MessageTypes';
 
 const fetchAllMedia = async (
-  page: number | undefined,
-  limit: number | undefined,
-  sort: string | undefined
+  page: number | undefined = undefined,
+  limit: number | undefined = undefined,
+  sort: string | undefined = undefined
 ): Promise<MediaItem[] | null> => {
   const uploadPath = process.env.UPLOAD_URL;
   try {

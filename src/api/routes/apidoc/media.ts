@@ -1,10 +1,11 @@
 /**
- * @api {get} /media?page=1?limit=10 Get Media List
+ * @api {get} /media?page=1?limit=10?sort=title Get Media List
  * @apiName GetMediaList
  * @apiGroup Media
  *
  * @apiParam {Number} [page=1] Page number.
  * @apiParam {Number} [limit=10] Number of items per page.
+ * @apiParam {String} [sort=created_at] Sort by created_at or title.
  *
  * @apiSuccess {Object[]} media_list List of media items.
  * @apiSuccess {Number} media_list.media_id Media's unique ID.
