@@ -6,7 +6,7 @@ import {MessageResponse} from '@sharedTypes/MessageTypes';
 
 const fetchAllMedia = async (
   page: number | undefined,
-  num: number | undefined,
+  limit: number | undefined,
   sort: string | undefined
 ): Promise<MediaItem[] | null> => {
   const uploadPath = process.env.UPLOAD_URL;
@@ -14,15 +14,15 @@ const fetchAllMedia = async (
     if (sort !== 'created_at' && sort !== 'title') {
       sort = 'created_at';
     }
-    const offset = (page || 0) * (num || 10);
+    const offset = (page || 0) * (limit || 10);
     const sql = promisePool.format(
       `SELECT *,
                 CONCAT(?, filename) AS filename,
                 CONCAT(?, CONCAT(filename, "-thumb.png")) AS thumbnail
                 FROM MediaItems
                 ORDER BY ? DESC
-                ${num && page ? 'LIMIT ? OFFSET ?' : ''}`,
-      [uploadPath, uploadPath, sort, num, offset]
+                ${page ? 'LIMIT ? OFFSET ?' : ''}`,
+      [uploadPath, uploadPath, sort, limit, offset]
     );
 
     console.log('sql', sql);

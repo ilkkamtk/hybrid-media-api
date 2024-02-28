@@ -14,15 +14,15 @@ import {MediaResponse, MessageResponse} from '@sharedTypes/MessageTypes';
 import {MediaItem, TokenContent} from '@sharedTypes/DBTypes';
 
 const mediaListGet = async (
-  req: Request<{}, {}, {page: string; num: string; sort: string}>,
+  req: Request<{}, {}, {page: string; limit: string; sort: string}>,
   res: Response<MediaItem[]>,
   next: NextFunction
 ) => {
   try {
-    const {page, num, sort} = req.query;
+    const {page, limit, sort} = req.query;
     const media = await fetchAllMedia(
       Number(page),
-      Number(num),
+      Number(limit),
       sort as string
     );
     if (media) {
