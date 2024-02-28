@@ -21,7 +21,7 @@ const fetchAllMedia = async (
                 CONCAT(?, CONCAT(filename, "-thumb.png")) AS thumbnail
                 FROM MediaItems
                 ORDER BY ? DESC
-                ${num && page && 'LIMIT ? OFFSET ?'}`,
+                ${num && page ? 'LIMIT ? OFFSET ?' : ''}`,
       [uploadPath, uploadPath, sort, num, offset]
     );
 
