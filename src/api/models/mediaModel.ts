@@ -14,15 +14,14 @@ const fetchAllMedia = async (
     if (sort !== 'created_at' && sort !== 'title') {
       sort = 'created_at';
     }
-    limit = limit || 10;
-    const offset = (page || 0) * limit;
+    const offset = ((page || 1) - 1) * (limit || 10);
     const sql = promisePool.format(
       `SELECT *,
-                CONCAT(?, filename) AS filename,
-                CONCAT(?, CONCAT(filename, "-thumb.png")) AS thumbnail
-                FROM MediaItems
-                ORDER BY ? DESC
-                LIMIT ? OFFSET ?`,
+      CONCAT(?, filename) AS filename,
+      CONCAT(?, CONCAT(filename, "-thumb.png")) AS thumbnail
+      FROM MediaItems
+      ORDER BY ? DESC
+      ${limit ? 'LIMIT ? OFFSET ?' : ''}`,
       [uploadPath, uploadPath, sort, limit, offset]
     );
 

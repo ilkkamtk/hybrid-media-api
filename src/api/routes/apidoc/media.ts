@@ -3,8 +3,8 @@
  * @apiName GetMediaList
  * @apiGroup Media
  *
- * @apiParam {Number} [page=1] Page number.
- * @apiParam {Number} [limit=10] Number of items per page.
+ * @apiParam {Number} [page=1] Page number. Use both page and limit to implement pagination.
+ * @apiParam {Number} [limit=10] Number of items per page. Use both page and limit to implement pagination.
  * @apiParam {String} [sort=created_at] Sort by created_at or title.
  *
  * @apiSuccess {Object[]} media_list List of media items.
