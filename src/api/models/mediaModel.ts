@@ -16,7 +16,7 @@ const fetchAllMedia = async (
       CONCAT(?, filename) AS filename,
       CONCAT(?, CONCAT(filename, "-thumb.png")) AS thumbnail
       FROM MediaItems
-      ${limit ? 'LIMIT ? OFFSET ?' : ''}`,
+      ${limit ? 'LIMIT ? OFFSET ?' : ''};`,
       [uploadPath, uploadPath, limit, offset]
     );
 
