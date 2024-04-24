@@ -22,7 +22,7 @@ router
     body('title').notEmpty().isString().escape(),
     body('description').notEmpty().isString().escape(),
     body('filename').notEmpty().isString().escape(),
-    body('media_type').notEmpty().isString().escape(),
+    body('media_type').notEmpty().isMimeType(),
     body('filesize').notEmpty().isNumeric().escape(),
     validationErrors,
     mediaPost
