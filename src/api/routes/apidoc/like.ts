@@ -187,13 +187,28 @@
  * @apiExample {json} Request-Example:
  *     GET /like/bymedia/user/1
  *
- * @apiSuccess {Object} like Count object.
- * @apiSuccess {Number} likes.count Either 1 or 0.
+ * @apiSuccess {Object[]} likes List of Likes.
+ * @apiSuccess {Number} likes.id Like's ID.
+ * @apiSuccess {Number} likes.media_id Media's ID.
+ * @apiSuccess {Number} likes.user_id User's ID.
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
  *     {
- *      "count": 1
+ *       "likes": [
+ *         {
+ *           "id": 1,
+ *           "media_id": 1,
+ *           "user_id": 1
+ *         }
+ *       ]
  *     }
  *
+ * @apiError LikesNotFound No likes were found.
+ *
+ * @apiErrorExample {json} Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "message": "No likes found"
+ *     }
  */

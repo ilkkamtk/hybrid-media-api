@@ -135,15 +135,15 @@ const deleteLike = async (
 const fetchLikeByMediaIdAndUserId = async (
   media_id: number,
   user_id: number
-): Promise<{count: number}> => {
+): Promise<Like> => {
   try {
-    const [rows] = await promisePool.execute<
-      RowDataPacket[] & {count: number}[]
-    >(
-      'SELECT COUNT(*) as count FROM Likes WHERE media_id = ? AND user_id = ?',
+    const [rows] = await promisePool.execute<RowDataPacket[] & Like[]>(
+      'SELECT * FROM Likes WHERE media_id = ? AND user_id = ?',
       [media_id, user_id]
     );
-    console.log(rows[0]);
+    if (rows.length === 0) {
+      throw new Error('Like not found');
+    }
     return rows[0];
   } catch (e) {
     console.error('fetchLikeByMediaIdAndUserId error', (e as Error).message);
