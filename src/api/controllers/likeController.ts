@@ -143,7 +143,7 @@ const likeByMediaIdAndUserIdGet = async (
     }
     next(new CustomError('Like not found', 404));
   } catch (error) {
-    next(error);
+    next(new CustomError((error as Error).message, 404));
   }
 };
 
