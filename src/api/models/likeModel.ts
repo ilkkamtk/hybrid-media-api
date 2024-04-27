@@ -22,6 +22,7 @@ const fetchAllLikes = async (): Promise<Like[] | null> => {
 // Request a list of likes by media item id
 const fetchLikesByMediaId = async (id: number): Promise<Like[] | null> => {
   try {
+    console.log('SELECT * FROM Likes WHERE media_id = ' + id);
     const [rows] = await promisePool.execute<RowDataPacket[] & Like[]>(
       'SELECT * FROM Likes WHERE media_id = ?',
       [id]
