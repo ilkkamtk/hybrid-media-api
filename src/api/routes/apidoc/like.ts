@@ -187,10 +187,8 @@
  * @apiExample {json} Request-Example:
  *     GET /like/bymedia/user/1
  *
- * @apiSuccess {Object[]} likes List of Likes.
- * @apiSuccess {Number} likes.id Like's ID.
- * @apiSuccess {Number} likes.media_id Media's ID.
- * @apiSuccess {Number} likes.user_id User's ID.
+ * @apiSuccess {Object} like Count object.
+ * @apiSuccess {Number} likes.count Either 1 or 0.
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK

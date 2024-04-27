@@ -137,12 +137,14 @@ const fetchLikeByMediaIdAndUserId = async (
   user_id: number
 ): Promise<{count: number}> => {
   try {
-    const [rows] = await promisePool.execute<RowDataPacket[] & {count: number}>(
+    const [rows] = await promisePool.execute<
+      RowDataPacket[] & {count: number}[]
+    >(
       'SELECT COUNT(*) as count FROM Likes WHERE media_id = ? AND user_id = ?',
       [media_id, user_id]
     );
-    console.log(rows);
-    return rows;
+    console.log(rows[0]);
+    return rows[0];
   } catch (e) {
     console.error('fetchLikeByMediaIdAndUserId error', (e as Error).message);
     throw new Error((e as Error).message);
