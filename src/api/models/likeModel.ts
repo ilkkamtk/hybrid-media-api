@@ -138,9 +138,10 @@ const fetchLikeByMediaIdAndUserId = async (
 ): Promise<Like> => {
   try {
     const [rows] = await promisePool.execute<RowDataPacket[] & Like[]>(
-      'SELECT * FROM Likes WHERE media_id = ? AND user_id = ?',
+      'SELECT COUNT(*) FROM Likes WHERE media_id = ? AND user_id = ?',
       [media_id, user_id]
     );
+    console.log(rows);
     if (rows.length === 0) {
       throw new Error('Like not found');
     }
