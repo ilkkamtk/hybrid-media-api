@@ -193,20 +193,7 @@
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
  *     {
- *       "likes": [
- *         {
- *           "id": 1,
- *           "media_id": 1,
- *           "user_id": 1
- *         }
- *       ]
+ *      "count": 1
  *     }
  *
- * @apiError LikesNotFound No likes were found.
- *
- * @apiErrorExample {json} Error-Response:
- *     HTTP/1.1 404 Not Found
- *     {
- *       "message": "No likes found"
- *     }
  */
