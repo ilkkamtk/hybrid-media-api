@@ -10,7 +10,7 @@ const promisePool = mysql.createPool({
   queueLimit: 0,
   // Convert JSON fields to objects
   typeCast: function (field, next) {
-    if (field.type === 'JSON') {
+    if (field && field.type === 'JSON') {
       return JSON.parse(field.string());
     }
     return next();
