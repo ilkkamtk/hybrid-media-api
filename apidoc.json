@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "For Metropolia Courses",
   "title": "Media API",
-  "url": "/api/v1",
+  "url": "./media-api",
   "template": {
     "withCompare": true,
     "withGenerator": true
