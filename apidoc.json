@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "For Metropolia Courses",
   "title": "Media API",
-  "url": "./media-api",
+  "url": "/api/v1",
   "template": {
     "withCompare": true,
-    "withGenerator": true
+    "withGenerator": true,
+    "path": "apidoc-template"
   },
   "exclude": ["node_modules/", "public/"],
   "files": ["src/**/*.ts"]
