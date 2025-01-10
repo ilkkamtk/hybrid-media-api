@@ -1,165 +1,101 @@
 /**
- * @api {get} /tag List Tags
- * @apiName GetTagList
+ * @api {get} /tag Get All Tags
+ * @apiName GetAllTags
  * @apiGroup Tag
  *
- * @apiSuccess {Object[]} tags List of tags.
- * @apiSuccess {Number} tags.tag_id ID of the tag.
- * @apiSuccess {String} tags.tag_name Name of the tag.
+ * @apiSuccess {Object[]} tags Array of tag objects
+ * @apiSuccess {Number} tags.tag_id Tag's unique ID
+ * @apiSuccess {String} tags.tag_name Name of the tag
  *
- * @apiSuccessExample {json} Success-Response:
+ * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     [
  *       {
  *         "tag_id": 1,
- *         "tag_name": "example tag"
- *       },
- *       ...
+ *         "tag_name": "nature"
+ *       }
  *     ]
  *
- * @apiError TagNotFound The tags were not found.
- *
- * @apiErrorExample {json} Error-Response:
- *     HTTP/1.1 404 Not Found
- *     {
- *       "message": "No tags found"
- *     }
+ * @apiError TagsNotFound No tags found
  */
+
 /**
- * @api {post} /tag Post Tag
+ * @api {post} /tag Create Tag
  * @apiName PostTag
  * @apiGroup Tag
  *
- * @apiHeader {String} Authorization Bearer token for authentication.
+ * @apiHeader {String} Authorization Bearer token for authentication
  *
- * @apiParam {String} tag_name Name of the tag.
+ * @apiParam {String} tag_name Name of the tag (2-50 characters)
+ * @apiParam {Number} media_id ID of the media to tag (min: 1)
  *
- * @apiExample {json} Request-Example:
- *     {
- *       "tag_name": "example tag"
- *     }
+ * @apiSuccess {String} message Success message
  *
- * @apiSuccess {String} message Success message.
- *
- * @apiSuccessExample {json} Success-Response:
+ * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
- *       "message": "Tag created successfully"
+ *       "message": "Tag added"
  *     }
  *
- * @apiError ValidationError Validation failed for the input parameters.
- *
- * @apiErrorExample {json} Error-Response:
- *     HTTP/1.1 400 Bad Request
- *     {
- *       "error": "ValidationError"
- *     }
+ * @apiError ValidationError Invalid tag name or media_id
+ * @apiError Unauthorized Authentication required
  */
+
 /**
- * @api {get} /bymedia/:id Get Tags by Media ID
+ * @api {get} /tag/bymedia/:id Get Tags by Media ID
  * @apiName GetTagsByMediaId
  * @apiGroup Tag
  *
- * @apiParam {Number} id Media's unique ID.
+ * @apiParam {Number} id Media's ID (min: 1)
  *
- * @apiSuccess {Object[]} tags List of tags.
- * @apiSuccess {Number} tags.tag_id ID of the tag.
- * @apiSuccess {String} tags.tag_name Name of the tag.
+ * @apiSuccess {Object[]} tags Array of tags for the media
+ * @apiSuccess {Number} tags.tag_id Tag's ID
+ * @apiSuccess {String} tags.tag_name Tag's name
+ * @apiSuccess {Number} tags.media_id Media's ID
  *
- * @apiSuccessExample {json} Success-Response:
- *     HTTP/1.1 200 OK
- *     [
- *       {
- *         "tag_id": 1,
- *         "tag_name": "example tag"
- *       },
- *       ...
- *     ]
- *
- * @apiError TagNotFound The tags were not found.
- *
- * @apiErrorExample {json} Error-Response:
- *     HTTP/1.1 404 Not Found
- *     {
- *       "message": "No tags found"
- *     }
+ * @apiError TagsNotFound No tags found for this media
  */
+
 /**
- * @api {delete} /tag/:id Delete Tag from Media
+ * @api {delete} /tag/bymedia/:media_id/:tag_id Delete Tag from Media
  * @apiName DeleteTagFromMedia
  * @apiGroup Tag
  *
- * @apiHeader {String} Authorization Bearer token for authentication.
+ * @apiHeader {String} Authorization Bearer token for authentication
  *
- * @apiParam {Number} id Tag's unique ID.
+ * @apiParam {Number} media_id Media's ID (min: 1)
+ * @apiParam {Number} tag_id Tag's ID (min: 1)
  *
- * @apiSuccess {String} message Success message.
+ * @apiSuccess {String} message Success message
  *
- * @apiSuccessExample {json} Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "message": "Tag deleted successfully"
- *     }
- *
- * @apiError TagNotFound The tag was not found.
- *
- * @apiErrorExample {json} Error-Response:
- *     HTTP/1.1 404 Not Found
- *     {
- *       "message": "Tag not found"
- *     }
+ * @apiError Unauthorized Not authorized to remove this tag
+ * @apiError NotFound Media or tag not found
  */
+
 /**
- * @api {get} /bytag/:tag_id Get Files by Tag ID
- * @apiName GetFilesByTagId
+ * @api {get} /tag/bytag/:tag_id Get Media by Tag
+ * @apiName GetMediaByTag
  * @apiGroup Tag
  *
- * @apiParam {Number} tag_id Tag's unique ID.
+ * @apiParam {Number} tag_id Tag's ID (min: 1)
  *
- * @apiSuccess {Object[]} files List of files.
- * @apiSuccess {Number} files.file_id ID of the file.
- * @apiSuccess {String} files.file_name Name of the file.
+ * @apiSuccess {Object[]} media Array of media items with this tag
  *
- * @apiSuccessExample {json} Success-Response:
- *     HTTP/1.1 200 OK
- *     [
- *       {
- *         "file_id": 1,
- *         "file_name": "example file"
- *       },
- *       ...
- *     ]
- *
- * @apiError FileNotFound The files were not found.
- *
- * @apiErrorExample {json} Error-Response:
- *     HTTP/1.1 404 Not Found
- *     {
- *       "message": "No files found"
- *     }
+ * @apiError MediaNotFound No media found with this tag
  */
+
 /**
  * @api {delete} /tag/:id Delete Tag
  * @apiName DeleteTag
  * @apiGroup Tag
  *
- * @apiHeader {String} Authorization Bearer token for authentication.
+ * @apiHeader {String} Authorization Bearer token for authentication
+ * @apiHeader {String} level_name Must be "Admin" to delete tags
  *
- * @apiParam {Number} id Tag's unique ID.
+ * @apiParam {Number} id Tag's ID (min: 1)
  *
- * @apiSuccess {String} message Success message.
+ * @apiSuccess {String} message Success message
  *
- * @apiSuccessExample {json} Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "message": "Tag deleted successfully"
- *     }
- *
- * @apiError TagNotFound The tag was not found.
- *
- * @apiErrorExample {json} Error-Response:
- *     HTTP/1.1 404 Not Found
- *     {
- *       "message": "Tag not found"
- *     }
+ * @apiError Unauthorized Not authorized to delete tags
+ * @apiError TagNotFound Tag not found
  */

@@ -5,28 +5,23 @@ import {
   postMedia,
   deleteMedia,
   fetchMostLikedMedia,
-  fetchMostCommentedMedia,
-  fetchHighestRatedMedia,
+  fetchMediaByUserId,
   putMedia,
 } from '../models/mediaModel';
+import {MediaResponse, MessageResponse} from 'hybrid-types/MessageTypes';
+import {MediaItem, TokenContent} from 'hybrid-types/DBTypes';
 import CustomError from '../../classes/CustomError';
-import {MediaResponse, MessageResponse} from '@sharedTypes/MessageTypes';
-import {MediaItem, TokenContent} from '@sharedTypes/DBTypes';
+import {ERROR_MESSAGES} from '../../utils/errorMessages';
 
 const mediaListGet = async (
   req: Request<{}, {}, {page: string; limit: string}>,
-  res: Response<MediaItem[]>,
-  next: NextFunction
+  res: Response<MediaResponse>,
+  next: NextFunction,
 ) => {
   try {
     const {page, limit} = req.query;
     const media = await fetchAllMedia(Number(page), Number(limit));
-    if (media) {
-      res.json(media);
-      return;
-    }
-    const error = new CustomError('No media found', 404);
-    next(error);
+    res.json({message: 'Media found', media});
   } catch (error) {
     next(error);
   }
@@ -34,18 +29,13 @@ const mediaListGet = async (
 
 const mediaGet = async (
   req: Request<{id: string}>,
-  res: Response<MediaItem>,
-  next: NextFunction
+  res: Response<MediaResponse>,
+  next: NextFunction,
 ) => {
   try {
     const id = Number(req.params.id);
     const media = await fetchMediaById(id);
-    if (media) {
-      res.json(media);
-      return;
-    }
-    const error = new CustomError('No media found', 404);
-    next(error);
+    res.json({message: 'Media found', media});
   } catch (error) {
     next(error);
   }
@@ -53,24 +43,14 @@ const mediaGet = async (
 
 const mediaPost = async (
   req: Request<{}, {}, Omit<MediaItem, 'media_id' | 'created_at'>>,
-  res: Response<
-    MediaResponse,
-    {
-      user: TokenContent;
-    }
-  >,
-  next: NextFunction
+  res: Response<MediaResponse, {user: TokenContent}>,
+  next: NextFunction,
 ) => {
   try {
     // add user_id to media object from token
     req.body.user_id = res.locals.user.user_id;
     const newMedia = await postMedia(req.body);
-    if (newMedia) {
-      res.json({message: 'Media created', media: newMedia});
-      return;
-    }
-    const error = new CustomError('Media not created', 500);
-    next(error);
+    res.json({message: 'Media created', media: newMedia});
   } catch (error) {
     next(error);
   }
@@ -79,7 +59,7 @@ const mediaPost = async (
 const mediaDelete = async (
   req: Request<{id: string}>,
   res: Response<MessageResponse, {user: TokenContent; token: string}>,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const id = Number(req.params.id);
@@ -87,14 +67,9 @@ const mediaDelete = async (
       id,
       res.locals.user.user_id,
       res.locals.token,
-      res.locals.user.level_name
+      res.locals.user.level_name,
     );
-    if (result) {
-      res.json({message: 'Media deleted'});
-      return;
-    }
-    const error = new CustomError('Media not deleted', 500);
-    next(error);
+    res.json(result);
   } catch (error) {
     next(error);
   }
@@ -103,7 +78,7 @@ const mediaDelete = async (
 const mediaPut = async (
   req: Request<{id: string}, {}, Pick<MediaItem, 'title' | 'description'>>,
   res: Response<MediaResponse, {user: TokenContent}>,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const id = Number(req.params.id);
@@ -111,14 +86,27 @@ const mediaPut = async (
       req.body,
       id,
       res.locals.user.user_id,
-      res.locals.user.level_name
+      res.locals.user.level_name,
     );
-    if (media) {
-      res.json({message: 'Media updated', media});
-      return;
-    }
-    const error = new CustomError('Media not updated', 500);
+    res.json({message: 'Media updated', media});
+  } catch (error) {
     next(error);
+  }
+};
+
+const mediaByUserGet = async (
+  req: Request<{id: string}>,
+  res: Response<MediaResponse, {user: TokenContent}>,
+  next: NextFunction,
+) => {
+  try {
+    const id = Number(req.params.id) || res.locals.user.user_id;
+    if (isNaN(id)) {
+      throw new CustomError(ERROR_MESSAGES.MEDIA.NO_ID, 400);
+    }
+
+    const media = await fetchMediaByUserId(id);
+    res.json({message: 'Media found', media});
   } catch (error) {
     next(error);
   }
@@ -126,53 +114,12 @@ const mediaPut = async (
 
 const mediaListMostLikedGet = async (
   req: Request,
-  res: Response<MediaItem>,
-  next: NextFunction
+  res: Response<MediaResponse>,
+  next: NextFunction,
 ) => {
   try {
     const media = await fetchMostLikedMedia();
-    if (media) {
-      res.json(media);
-      return;
-    }
-    const error = new CustomError('No media found', 404);
-    next(error);
-  } catch (error) {
-    next(error);
-  }
-};
-
-const mediaListMostCommentedGet = async (
-  req: Request,
-  res: Response<MediaItem>,
-  next: NextFunction
-) => {
-  try {
-    const media = await fetchMostCommentedMedia();
-    if (media) {
-      res.json(media);
-      return;
-    }
-    const error = new CustomError('No media found', 404);
-    next(error);
-  } catch (error) {
-    next(error);
-  }
-};
-
-const mediaListHighestRatedGet = async (
-  req: Request,
-  res: Response<MediaItem>,
-  next: NextFunction
-) => {
-  try {
-    const media = await fetchHighestRatedMedia();
-    if (media) {
-      res.json(media);
-      return;
-    }
-    const error = new CustomError('No media found', 404);
-    next(error);
+    res.json({message: 'Most liked media found', media});
   } catch (error) {
     next(error);
   }
@@ -184,7 +131,6 @@ export {
   mediaPost,
   mediaPut,
   mediaDelete,
+  mediaByUserGet,
   mediaListMostLikedGet,
-  mediaListMostCommentedGet,
-  mediaListHighestRatedGet,
 };

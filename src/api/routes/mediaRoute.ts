@@ -5,44 +5,80 @@ import {
   mediaPost,
   mediaPut,
   mediaDelete,
+  mediaByUserGet,
   mediaListMostLikedGet,
-  mediaListMostCommentedGet,
-  mediaListHighestRatedGet,
 } from '../controllers/mediaController';
 import {authenticate, validationErrors} from '../../middlewares';
-import {body} from 'express-validator';
+import {body, param, query} from 'express-validator';
 
 const router = express.Router();
 
 router
   .route('/')
-  .get(mediaListGet)
+  .get(
+    query('page').optional().isInt({min: 1}).toInt(),
+    query('limit').optional().isInt({min: 1}).toInt(),
+    validationErrors,
+    mediaListGet,
+  )
   .post(
     authenticate,
-    body('title').notEmpty().isString().escape(),
-    body('description').notEmpty().isString().escape(),
-    body('filename').notEmpty().isString().escape(),
-    body('media_type').notEmpty().isMimeType(),
-    body('filesize').notEmpty().isNumeric().escape(),
+    body('title')
+      .trim()
+      .notEmpty()
+      .isString()
+      .isLength({min: 3, max: 128})
+      .escape(),
+    body('description')
+      .trim()
+      .notEmpty()
+      .isString()
+      .isLength({max: 1000})
+      .escape(),
+    body('filename')
+      .trim()
+      .notEmpty()
+      .isString()
+      .matches(/^[\w.-]+$/)
+      .escape(),
+    body('media_type').trim().notEmpty().isMimeType(),
+    body('filesize').notEmpty().isInt({min: 1}).toInt(),
     validationErrors,
-    mediaPost
+    mediaPost,
   );
+
 router.route('/mostliked').get(mediaListMostLikedGet);
-
-router.route('/mostcommented').get(mediaListMostCommentedGet);
-
-router.route('/highestrated').get(mediaListHighestRatedGet);
 
 router
   .route('/:id')
-  .get(mediaGet)
+  .get(param('id').isInt({min: 1}).toInt(), validationErrors, mediaGet)
   .put(
     authenticate,
-    body('title').optional().isString().escape(),
-    body('description').optional().isString().escape(),
+    param('id').isInt({min: 1}).toInt(),
+    body('title')
+      .optional()
+      .trim()
+      .isString()
+      .isLength({min: 3, max: 128})
+      .escape(),
+    body('description')
+      .optional()
+      .trim()
+      .isString()
+      .isLength({max: 1000})
+      .escape(),
     validationErrors,
-    mediaPut
+    mediaPut,
   )
-  .delete(authenticate, mediaDelete);
+  .delete(
+    authenticate,
+    param('id').isInt({min: 1}).toInt(),
+    validationErrors,
+    mediaDelete,
+  );
+
+router.route('/byuser/:id').get(mediaByUserGet);
+
+router.route('/bytoken').get(authenticate, mediaByUserGet);
 
 export default router;

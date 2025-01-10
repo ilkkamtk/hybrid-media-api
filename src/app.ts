@@ -1,4 +1,5 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
 import express from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
@@ -16,7 +17,7 @@ app.use(
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-eval'"],
     },
-  })
+  }),
 );
 app.use(cors());
 app.use(express.json());
