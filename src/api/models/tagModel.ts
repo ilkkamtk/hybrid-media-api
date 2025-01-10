@@ -10,9 +10,6 @@ const fetchAllTags = async (): Promise<Tag[]> => {
   const [rows] = await promisePool.execute<RowDataPacket[] & Tag[]>(
     'SELECT * FROM Tags',
   );
-  if (rows.length === 0) {
-    throw new CustomError(ERROR_MESSAGES.TAG.NOT_FOUND, 404);
-  }
   return rows;
 };
 
@@ -23,9 +20,6 @@ const fetchFilesByTagById = async (tag_id: number): Promise<MediaItem[]> => {
      WHERE MediaItemTags.tag_id = ?`,
     [tag_id],
   );
-  if (rows.length === 0) {
-    throw new CustomError(ERROR_MESSAGES.TAG.FILES_NOT_FOUND, 404);
-  }
   return rows;
 };
 
@@ -73,9 +67,6 @@ const fetchTagsByMediaId = async (id: number): Promise<TagResult[]> => {
      WHERE MediaItemTags.media_id = ?`,
     [id],
   );
-  if (rows.length === 0) {
-    throw new CustomError(ERROR_MESSAGES.TAG.NOT_FOUND_MEDIA, 404);
-  }
   return rows;
 };
 

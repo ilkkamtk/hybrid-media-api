@@ -1,9 +1,8 @@
 import {NextFunction, Request, Response} from 'express';
 import jwt from 'jsonwebtoken';
-
+import {validationResult} from 'express-validator';
 import CustomError from './classes/CustomError';
 import {ErrorResponse} from 'hybrid-types/MessageTypes';
-import {validationResult} from 'express-validator';
 import {TokenContent} from 'hybrid-types/DBTypes';
 
 const notFound = (req: Request, res: Response, next: NextFunction) => {
@@ -71,8 +70,10 @@ const validationErrors = (req: Request, _res: Response, next: NextFunction) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const messages: string = errors
-      .array()
-      .map((error) => `${error.msg}: ${error.type}`)
+      .array({onlyFirstError: true})
+      .map(
+        (error) => `${error.msg}: ${(error as unknown as {path: string}).path}`, // type gymnastics because of express-validator type is not correct
+      )
       .join(', ');
     next(new CustomError(messages, 400));
     return;

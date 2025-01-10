@@ -58,10 +58,6 @@ const fetchAllMedia = async (
   console.log(stmt);
 
   const [rows] = await promisePool.execute<RowDataPacket[] & MediaItem[]>(stmt);
-
-  if (rows.length === 0) {
-    throw new CustomError(ERROR_MESSAGES.MEDIA.NOT_FOUND, 404);
-  }
   return rows;
 };
 
@@ -204,9 +200,6 @@ const fetchMediaByUserId = async (user_id: number): Promise<MediaItem[]> => {
   console.log(stmt);
 
   const [rows] = await promisePool.execute<RowDataPacket[] & MediaItem[]>(stmt);
-  if (rows.length === 0) {
-    throw new CustomError(ERROR_MESSAGES.MEDIA.NOT_FOUND_USER, 404);
-  }
   return rows;
 };
 

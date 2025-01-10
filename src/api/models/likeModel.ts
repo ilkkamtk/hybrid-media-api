@@ -10,9 +10,6 @@ const fetchAllLikes = async (): Promise<Like[]> => {
   const [rows] = await promisePool.execute<RowDataPacket[] & Like[]>(
     'SELECT * FROM Likes',
   );
-  if (rows.length === 0) {
-    throw new CustomError(ERROR_MESSAGES.LIKE.NOT_FOUND, 404);
-  }
   return rows;
 };
 
@@ -23,9 +20,6 @@ const fetchLikesByMediaId = async (id: number): Promise<Like[]> => {
     'SELECT * FROM Likes WHERE media_id = ?',
     [id],
   );
-  if (rows.length === 0) {
-    throw new CustomError(ERROR_MESSAGES.LIKE.NOT_FOUND_MEDIA, 404);
-  }
   return rows;
 };
 
@@ -43,9 +37,6 @@ const fetchLikesByUserId = async (id: number): Promise<Like[]> => {
     'SELECT * FROM Likes WHERE user_id = ?',
     [id],
   );
-  if (rows.length === 0) {
-    throw new CustomError(ERROR_MESSAGES.LIKE.NOT_FOUND_USER, 404);
-  }
   return rows;
 };
 
