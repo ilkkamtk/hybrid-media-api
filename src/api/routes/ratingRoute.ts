@@ -7,8 +7,8 @@ import {
   ratingDelete,
   ratingAverageByMediaIdGet,
 } from '../controllers/ratingController';
-import {authenticate} from '../../middlewares';
-import {body} from 'express-validator';
+import {authenticate, validationErrors} from '../../middlewares';
+import {body, param} from 'express-validator';
 
 const router = express.Router();
 
@@ -17,17 +17,37 @@ router
   .get(ratingListGet)
   .post(
     authenticate,
-    body('rating_value').notEmpty().isInt({min: 1, max: 5}),
-    body('media_id').notEmpty().isNumeric(),
-    ratingPost
+    body('rating_value').notEmpty().isInt({min: 1, max: 5}).toInt(),
+    body('media_id').notEmpty().isInt({min: 1}).toInt(),
+    validationErrors,
+    ratingPost,
   );
 
-router.route('/bymedia/:id').get(ratingListByMediaIdGet);
+router
+  .route('/bymedia/:id')
+  .get(
+    param('id').isInt({min: 1}).toInt(),
+    validationErrors,
+    ratingListByMediaIdGet,
+  );
 
 router.route('/byuser').get(authenticate, ratingListByUserGet);
 
-router.route('/average/:id').get(ratingAverageByMediaIdGet);
+router
+  .route('/average/:id')
+  .get(
+    param('id').isInt({min: 1}).toInt(),
+    validationErrors,
+    ratingAverageByMediaIdGet,
+  );
 
-router.route('/:id').delete(authenticate, ratingDelete);
+router
+  .route('/:id')
+  .delete(
+    authenticate,
+    param('id').isInt({min: 1}).toInt(),
+    validationErrors,
+    ratingDelete,
+  );
 
 export default router;

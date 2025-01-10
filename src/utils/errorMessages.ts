@@ -24,4 +24,22 @@ export const ERROR_MESSAGES = {
     NOT_AUTHORIZED: 'Not authorized to modify tags',
     FILES_NOT_FOUND: 'No files found with this tag',
   },
+  RATING: {
+    NOT_FOUND: 'No ratings found',
+    NOT_FOUND_MEDIA: 'No ratings found for media',
+    NOT_FOUND_USER: 'No ratings found for user',
+    NOT_CREATED: 'Rating not created',
+    NOT_DELETED: 'Rating not deleted',
+    NOT_UPDATED: 'Rating not updated',
+    ALREADY_EXISTS: 'User has already rated this media item',
+  },
+  COMMENT: {
+    NOT_FOUND: 'No comments found',
+    NOT_FOUND_MEDIA: 'No comments found for media',
+    NOT_FOUND_USER: 'No comments found for user',
+    NOT_CREATED: 'Comment not created',
+    NOT_DELETED: 'Comment not deleted',
+    NOT_UPDATED: 'Comment not updated',
+    NO_ID: 'No comment id provided',
+  },
 } as const;
