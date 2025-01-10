@@ -2,9 +2,9 @@ import {NextFunction, Request, Response} from 'express';
 import jwt from 'jsonwebtoken';
 
 import CustomError from './classes/CustomError';
-import {ErrorResponse} from '@sharedTypes/MessageTypes';
-import {TokenContent} from '@sharedTypes/DBTypes';
+import {ErrorResponse} from 'hybrid-types/MessageTypes';
 import {validationResult} from 'express-validator';
+import {TokenContent} from 'hybrid-types/DBTypes';
 
 const notFound = (req: Request, res: Response, next: NextFunction) => {
   const error = new CustomError(`🔍 - Not Found - ${req.originalUrl}`, 404);
@@ -16,7 +16,7 @@ const errorHandler = (
   req: Request,
   res: Response<ErrorResponse>,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  next: NextFunction
+  next: NextFunction,
 ) => {
   // console.log(err);
   const statusCode = err.status !== 200 ? err.status || 500 : 500;
@@ -29,7 +29,7 @@ const errorHandler = (
 const authenticate = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const bearer = req.headers.authorization;
@@ -47,7 +47,7 @@ const authenticate = async (
 
     const userFromToken = jwt.verify(
       token,
-      process.env.JWT_SECRET as string
+      process.env.JWT_SECRET as string,
     ) as TokenContent;
 
     console.log('userFromToken', userFromToken);
@@ -68,12 +68,11 @@ const authenticate = async (
 };
 
 const validationErrors = (req: Request, _res: Response, next: NextFunction) => {
-  console.log(req.body);
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const messages: string = errors
       .array()
-      .map((error) => `${error.msg}: ${error.param}`)
+      .map((error) => `${error.msg}: ${error.type}`)
       .join(', ');
     next(new CustomError(messages, 400));
     return;

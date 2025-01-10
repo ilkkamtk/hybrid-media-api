@@ -1,13 +1,14 @@
 /**
- * @api {get} /ratings Request Rating List
+ * @api {get} /rating Get All Ratings
  * @apiName GetRatingList
  * @apiGroup Rating
  *
- * @apiSuccess {Number} rating_id ID of the Rating.
- * @apiSuccess {Number} rating_value Value of the Rating.
- * @apiSuccess {Number} media_id ID of the Media.
- * @apiSuccess {Date} created_at Timestamp of when the Rating was created.
- * @apiSuccess {Number} user_id ID of the User who gave the Rating.
+ * @apiSuccess {Object[]} Array of rating objects
+ * @apiSuccess {Number} rating_id Rating's unique ID
+ * @apiSuccess {Number} rating_value Rating value (1-5)
+ * @apiSuccess {Number} media_id ID of the rated media
+ * @apiSuccess {Number} user_id ID of the user who rated
+ * @apiSuccess {String} created_at Timestamp when rating was created
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -16,18 +17,12 @@
  *         "rating_id": 1,
  *         "rating_value": 5,
  *         "media_id": 1,
- *         "created_at": "2022-01-01T00:00:00.000Z",
- *         "user_id": 1
+ *         "user_id": 1,
+ *         "created_at": "2024-01-26T09:38:08.000Z"
  *       }
  *     ]
  *
- * @apiError NoRatingsFound No ratings found.
- *
- * @apiErrorExample Error-Response:
- *     HTTP/1.1 404 Not Found
- *     {
- *       "error": "No ratings found"
- *     }
+ * @apiError RatingsNotFound No ratings found
  */
 /**
  * @api {get} /ratings/bymedia/:id Request Rating List by Media ID
@@ -98,13 +93,13 @@
  *     }
  */
 /**
- * @api {get} /ratings/average/:id Request Average Rating by Media ID
- * @apiName GetAverageRatingByMediaId
+ * @api {get} /rating/average/:id Get Average Rating
+ * @apiName GetAverageRating
  * @apiGroup Rating
  *
- * @apiParam {Number} id Media's unique ID.
+ * @apiParam {Number} id Media's unique ID
  *
- * @apiSuccess {Number} average Average rating of the Media.
+ * @apiSuccess {Number} average Average rating value
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -112,13 +107,7 @@
  *       "average": 4.5
  *     }
  *
- * @apiError NoRatingsFound No ratings found for the specified media ID.
- *
- * @apiErrorExample Error-Response:
- *     HTTP/1.1 404 Not Found
- *     {
- *       "error": "No ratings found"
- *     }
+ * @apiError RatingsNotFound No ratings for this media
  */
 /**
  * @api {delete} /ratings/:id Delete Rating
@@ -146,22 +135,16 @@
  *     }
  */
 /**
- * @api {post} /ratings Post Rating
+ * @api {post} /rating Post Rating
  * @apiName PostRating
  * @apiGroup Rating
  *
- * @apiHeader {String} Authorization Bearer token for authentication.
+ * @apiHeader {String} Authorization Bearer token for authentication
  *
- * @apiParam {Number} rating_value Rating value, can be an float between 0 and 5. 0 deletes the rating.
- * @apiParam {Number} media_id Media's unique ID.
+ * @apiParam {Number} rating_value Rating value (1-5)
+ * @apiParam {Number} media_id Media's unique ID
  *
- * @apiExample {json} Request-Example:
- *     {
- *       "rating_value": 5,
- *       "media_id": 1
- *     }
- *
- * @apiSuccess {String} message Success message.
+ * @apiSuccess {String} message Success message
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -169,11 +152,6 @@
  *       "message": "Rating added"
  *     }
  *
- * @apiError ValidationError Validation failed for the input parameters.
- *
- * @apiErrorExample Error-Response:
- *     HTTP/1.1 400 Bad Request
- *     {
- *       "error": "ValidationError"
- *     }
+ * @apiError ValidationError Invalid rating value or media_id
+ * @apiError Unauthorized Authentication required
  */

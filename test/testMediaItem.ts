@@ -1,6 +1,6 @@
 /* eslint-disable node/no-unpublished-import */
-import {MediaItem} from '@sharedTypes/DBTypes';
-import {MessageResponse, UploadResponse} from '@sharedTypes/MessageTypes';
+import {MediaItem} from 'hybrid-types/DBTypes';
+import {MessageResponse, UploadResponse} from 'hybrid-types/MessageTypes';
 import request from 'supertest';
 import {Application} from 'express';
 
@@ -8,7 +8,7 @@ const uploadMediaFile = (
   url: string | Application,
   path: string,
   mediaFile: string,
-  token: string
+  token: string,
 ): Promise<UploadResponse> => {
   return new Promise((resolve, reject) => {
     request(url)
@@ -57,7 +57,7 @@ const getMediaItems = (url: string | Application): Promise<MediaItem[]> => {
 
 const getMediaItem = (
   url: string | Application,
-  id: number
+  id: number,
 ): Promise<MediaItem> => {
   return new Promise((resolve, reject) => {
     request(url)
@@ -85,7 +85,7 @@ const postMediaItem = (
   url: string | Application,
   path: string,
   token: string,
-  mediaItem: Partial<MediaItem>
+  mediaItem: Partial<MediaItem>,
 ): Promise<MessageResponse> => {
   return new Promise((resolve, reject) => {
     request(url)
@@ -107,7 +107,7 @@ const postMediaItem = (
 const putMediaItem = (
   url: string | Application,
   id: number,
-  mediaItem: Omit<MediaItem, 'media_id' | 'thumbnail' | 'created_at'>
+  mediaItem: Omit<MediaItem, 'media_id' | 'thumbnail' | 'created_at'>,
 ): Promise<MessageResponse> => {
   return new Promise((resolve, reject) => {
     request(url)
@@ -128,7 +128,7 @@ const putMediaItem = (
 const deleteMediaItem = (
   url: string | Application,
   id: number,
-  token: string
+  token: string,
 ): Promise<MessageResponse> => {
   return new Promise((resolve, reject) => {
     request(url)
@@ -149,7 +149,7 @@ const deleteMediaItem = (
 // functions to test not found 404 for mediaItem routes
 const getNotFoundMediaItem = (
   url: string | Application,
-  id: number
+  id: number,
 ): Promise<MessageResponse> => {
   return new Promise((resolve, reject) => {
     request(url)
@@ -169,7 +169,7 @@ const getNotFoundMediaItem = (
 const putNotFoundMediaItem = (
   url: string | Application,
   id: number,
-  media_name: string
+  media_name: string,
 ): Promise<MessageResponse> => {
   return new Promise((resolve, reject) => {
     request(url)
@@ -189,7 +189,7 @@ const putNotFoundMediaItem = (
 
 const deleteNotFoundMediaItem = (
   url: string | Application,
-  id: number
+  id: number,
 ): Promise<MessageResponse> => {
   return new Promise((resolve, reject) => {
     request(url)
@@ -209,7 +209,7 @@ const deleteNotFoundMediaItem = (
 // functions to test invalid data 400 for mediaItem routes
 const postInvalidMediaItem = (
   url: string | Application,
-  media_name: string
+  media_name: string,
 ): Promise<MessageResponse> => {
   return new Promise((resolve, reject) => {
     request(url)
@@ -230,7 +230,7 @@ const postInvalidMediaItem = (
 const putInvalidMediaItem = (
   url: string | Application,
   id: string,
-  media_name: string
+  media_name: string,
 ): Promise<MessageResponse> => {
   return new Promise((resolve, reject) => {
     request(url)
@@ -250,7 +250,7 @@ const putInvalidMediaItem = (
 
 const deleteInvalidMediaItem = (
   url: string | Application,
-  id: string
+  id: string,
 ): Promise<MessageResponse> => {
   return new Promise((resolve, reject) => {
     request(url)
@@ -269,7 +269,7 @@ const deleteInvalidMediaItem = (
 
 const getInvalidMediaItem = (
   url: string | Application,
-  id: string
+  id: string,
 ): Promise<MessageResponse> => {
   return new Promise((resolve, reject) => {
     request(url)
@@ -281,6 +281,82 @@ const getInvalidMediaItem = (
           const message: MessageResponse = response.body;
           expect(message.message).not.toBe('');
           resolve(message);
+        }
+      });
+  });
+};
+
+const getMediaItemsWithPagination = (
+  url: string | Application,
+  page: number,
+  limit: number,
+): Promise<MediaItem[]> => {
+  return new Promise((resolve, reject) => {
+    request(url)
+      .get(`/api/v1/media?page=${page}&limit=${limit}`)
+      .expect(200, (err, response) => {
+        if (err) {
+          reject(err);
+        } else {
+          const mediaItems: MediaItem[] = response.body;
+          expect(mediaItems.length).toBeLessThanOrEqual(limit);
+          resolve(mediaItems);
+        }
+      });
+  });
+};
+
+const getMostLikedMedia = (url: string | Application): Promise<MediaItem> => {
+  return new Promise((resolve, reject) => {
+    request(url)
+      .get('/api/v1/media/mostliked')
+      .expect(200, (err, response) => {
+        if (err) {
+          reject(err);
+        } else {
+          const mediaItem: MediaItem = response.body;
+          expect(mediaItem.media_id).toBeGreaterThan(0);
+          resolve(mediaItem);
+        }
+      });
+  });
+};
+
+const getMediaByUser = (
+  url: string | Application,
+  userId: number,
+): Promise<MediaItem[]> => {
+  return new Promise((resolve, reject) => {
+    request(url)
+      .get(`/api/v1/media/byuser/${userId}`)
+      .expect(200, (err, response) => {
+        if (err) {
+          reject(err);
+        } else {
+          const mediaItems: MediaItem[] = response.body;
+          mediaItems.forEach((item) => {
+            expect(item.user_id).toBe(userId);
+          });
+          resolve(mediaItems);
+        }
+      });
+  });
+};
+
+const getMediaByToken = (
+  url: string | Application,
+  token: string,
+): Promise<MediaItem[]> => {
+  return new Promise((resolve, reject) => {
+    request(url)
+      .get('/api/v1/media/bytoken')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200, (err, response) => {
+        if (err) {
+          reject(err);
+        } else {
+          const mediaItems: MediaItem[] = response.body;
+          resolve(mediaItems);
         }
       });
   });
@@ -300,4 +376,8 @@ export {
   putInvalidMediaItem,
   deleteInvalidMediaItem,
   getInvalidMediaItem,
+  getMediaItemsWithPagination,
+  getMostLikedMedia,
+  getMediaByUser,
+  getMediaByToken,
 };

@@ -8,22 +8,18 @@ import {
   deleteRating,
 } from '../models/ratingModel';
 import CustomError from '../../classes/CustomError';
-import {MessageResponse} from '@sharedTypes/MessageTypes';
-import {Rating, TokenContent} from '@sharedTypes/DBTypes';
+import {MessageResponse} from 'hybrid-types/MessageTypes';
+import {Rating, TokenContent} from 'hybrid-types/DBTypes';
 
 // list of ratings
 const ratingListGet = async (
   req: Request,
   res: Response<Rating[]>,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const ratings = await fetchAllRatings();
-    if (ratings) {
-      res.json(ratings);
-      return;
-    }
-    next(new CustomError('No ratings found', 404));
+    res.json(ratings);
   } catch (error) {
     next(error);
   }
@@ -33,15 +29,11 @@ const ratingListGet = async (
 const ratingListByMediaIdGet = async (
   req: Request<{id: string}>,
   res: Response<Rating[]>,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const ratings = await fetchRatingsByMediaId(Number(req.params.id));
-    if (ratings) {
-      res.json(ratings);
-      return;
-    }
-    next(new CustomError('No ratings found', 404));
+    res.json(ratings);
   } catch (error) {
     next(error);
   }
@@ -51,7 +43,7 @@ const ratingListByMediaIdGet = async (
 const ratingListByUserGet = async (
   req: Request,
   res: Response<Rating[], {user: TokenContent}>,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const ratings = await fetchRatingsByUserId(Number(res.locals.user.user_id));
@@ -69,13 +61,13 @@ const ratingListByUserGet = async (
 const ratingPost = async (
   req: Request<{}, {}, {rating_value: string; media_id: string}>,
   res: Response<MessageResponse, {user: TokenContent}>,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const result = await postRating(
       Number(req.body.rating_value),
       res.locals.user.user_id,
-      Number(req.body.media_id)
+      Number(req.body.media_id),
     );
     if (result) {
       res.json(result);
@@ -91,13 +83,13 @@ const ratingPost = async (
 const ratingDelete = async (
   req: Request<{id: string}>,
   res: Response<MessageResponse, {user: TokenContent}>,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const result = await deleteRating(
       Number(req.params.id),
       res.locals.user.user_id,
-      res.locals.user.level_name
+      res.locals.user.level_name,
     );
     if (result) {
       res.json(result);
@@ -112,7 +104,7 @@ const ratingDelete = async (
 const ratingAverageByMediaIdGet = async (
   req: Request<{id: string}>,
   res: Response<{average: number}>,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const average = await fetchAverageRatingByMediaId(Number(req.params.id));

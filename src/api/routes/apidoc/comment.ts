@@ -1,81 +1,48 @@
 /**
- * @api {get} /comments Get Comments
- * @apiName GetComments
+ * @api {get} /comment Get All Comments
+ * @apiName GetCommentList
  * @apiGroup Comment
  *
- * @apiSuccess {Object[]} comments List of comments.
- * @apiSuccess {Number} comments.comment_id ID of the comment.
- * @apiSuccess {Number} comments.user_id ID of the user who commented.
- * @apiSuccess {String} comments.media_id ID of the media that was commented on.
- * @apiSuccess {String} comments.comment_text Content of the comment.
- * @apiSuccess {created_at} comments.created_at Timestamp of when the comment was created.
+ * @apiSuccess {Object[]} Array of comment objects
+ * @apiSuccess {Number} comment_id Comment's unique ID
+ * @apiSuccess {Number} user_id User's ID who made the comment
+ * @apiSuccess {Number} media_id ID of the commented media
+ * @apiSuccess {String} comment_text Content of the comment
+ * @apiSuccess {String} created_at Timestamp when comment was created
  *
- * @apiSuccessExample {json} Success-Response:
+ * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     [
  *       {
  *         "comment_id": 1,
  *         "user_id": 1,
  *         "media_id": 1,
- *         "comment_text": "This is a comment"
- *         "created_at": "2022-01-01T00:00:00.000Z"
- *       },
- *       ...
+ *         "comment_text": "Great photo!",
+ *         "created_at": "2024-01-26T09:38:08.000Z"
+ *       }
  *     ]
  *
- * @apiError CommentsNotFound The comments were not found.
- *
- * @apiErrorExample {json} Error-Response:
- *     HTTP/1.1 404 Not Found
- *     {
- *       "message": "No comments found"
- *     }
+ * @apiError CommentsNotFound No comments found
  */
 /**
- * @api {post} /comments Post Comment
+ * @api {post} /comment Post Comment
  * @apiName PostComment
  * @apiGroup Comment
  *
- * @apiHeader {String} Authorization Bearer token for authentication.
+ * @apiHeader {String} Authorization Bearer token for authentication
  *
- * @apiParam {String} comment_text Text of the comment.
- * @apiParam {Number} media_id ID of the media.
+ * @apiParam {String} comment_text Text of the comment
+ * @apiParam {Number} media_id ID of the media
  *
- * @apiExample {json} Request-Example:
- *     POST /comments
- *     {
- *       "comment_text": "This is a comment",
- *       "media_id": 1
- *     }
+ * @apiSuccess {String} message Success message
  *
- * @apiSuccess {String} message Success message.
- * @apiSuccess {Object} comment Posted comment details.
- * @apiSuccess {Number} comment.comment_id ID of the comment.
- * @apiSuccess {Number} comment.user_id ID of the user who commented.
- * @apiSuccess {String} comment.media_id ID of the media that was commented on.
- * @apiSuccess {String} comment.content Content of the comment.
- * @apiSuccess {created_at} comment.created_at Timestamp of when the comment was created.
- *
- * @apiSuccessExample {json} Success-Response:
+ * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
- *       "message": "Comment posted successfully",
- *       "comment": {
- *         "comment_id": 1,
- *         "user_id": 1,
- *         "media_id": 1,
- *         "content": "This is a comment"
- *         "created_at": "2022-01-01T00:00:00.000Z"
- *       }
+ *       "message": "Comment added"
  *     }
  *
- * @apiError CommentNotPosted The comment was not posted.
- *
- * @apiErrorExample {json} Error-Response:
- *     HTTP/1.1 400 Bad Request
- *     {
- *       "message": "Comment not posted"
- *     }
+ * @apiError ValidationError Invalid input parameters
  */
 /**
  * @api {get} /comments/bymedia/:id Get Comments by Media ID
@@ -84,33 +51,30 @@
  *
  * @apiParam {Number} id Media's unique ID.
  *
- * @apiSuccess {Object[]} comments List of comments for the media.
- * @apiSuccess {Number} comments.comment_id ID of the comment.
- * @apiSuccess {Number} comments.user_id ID of the user who commented.
- * @apiSuccess {String} comment.media_id ID of the media that was commented on.
- * @apiSuccess {String} comments.content Content of the comment.
- * @apiSuccess {created_at} comments.created_at Timestamp of when the comment was created.
+ * @apiSuccess {String} message Success message
+ * @apiSuccess {Object[]} comments List of comments for the media
+ * @apiSuccess {Number} comments.comment_id ID of the comment
+ * @apiSuccess {Number} comments.user_id ID of the user who commented
+ * @apiSuccess {Number} comments.media_id ID of the media
+ * @apiSuccess {String} comments.comment_text Content of the comment
+ * @apiSuccess {String} comments.created_at Timestamp when created
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
- *     [
- *       {
- *         "comment_id": 1,
- *         "user_id": 1,
- *         "media_id": 1,
- *         "content": "This is a comment"
- *         "created_at": "2022-01-01T00:00:00.000Z"
- *       },
- *       ...
- *     ]
- *
- * @apiError CommentsNotFound The comments were not found.
- *
- * @apiErrorExample {json} Error-Response:
- *     HTTP/1.1 404 Not Found
  *     {
- *       "message": "No comments found"
+ *       "message": "Comments found",
+ *       "comments": [
+ *         {
+ *           "comment_id": 1,
+ *           "user_id": 1,
+ *           "media_id": 1,
+ *           "comment_text": "This is a comment",
+ *           "created_at": "2024-01-26T09:38:08.000Z"
+ *         }
+ *       ]
  *     }
+ *
+ * @apiError CommentsNotFound No comments found
  */
 /**
  * @api {get} /comments/byuser Get Comments by User Token
@@ -173,23 +137,28 @@
  *
  * @apiParam {Number} id Comment's unique ID.
  *
- * @apiSuccess {Number} comment_id ID of the comment.
- * @apiSuccess {Number} user_id ID of the user who commented.
- * @apiSuccess {Number} media_id ID of the media that was commented on.
- * @apiSuccess {String} content Content of the comment.
- * @apiSuccess {created_at} created_at Timestamp of when the comment was created.
+ * @apiSuccess {String} message Success message
+ * @apiSuccess {Object} comment Comment object
+ * @apiSuccess {Number} comment.comment_id ID of the comment
+ * @apiSuccess {Number} comment.user_id ID of the user
+ * @apiSuccess {Number} comment.media_id ID of the media
+ * @apiSuccess {String} comment.comment_text Content of the comment
+ * @apiSuccess {String} comment.created_at Timestamp when created
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
  *     {
- *       "comment_id": 1,
- *       "user_id": 1,
- *       "media_id": 1,
- *       "content": "This is a comment"
- *       "created_at": "2022-01-01T00:00:00.000Z"
+ *       "message": "Comment found",
+ *       "comment": {
+ *         "comment_id": 1,
+ *         "user_id": 1,
+ *         "media_id": 1,
+ *         "comment_text": "This is a comment",
+ *         "created_at": "2024-01-26T09:38:08.000Z"
+ *       }
  *     }
  *
- * @apiError CommentNotFound The comment was not found.
+ * @apiError CommentNotFound Comment not found
  *
  * @apiErrorExample {json} Error-Response:
  *     HTTP/1.1 404 Not Found

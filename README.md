@@ -1,8 +1,11 @@
-# Rest API with typescript - starter files
+# Media API Hybridisovellukset kurssille
 
-Tyypit voi ladata täältä: https://github.com/ilkkamtk/hybrid-types
+- TypeScript tyypit on ladattu npm:llä <https://github.com/ilkkamtk/hybrid-types> reposta.
 
-- clone this repo
-- run `npm i` to install dependencies
-- start app `npm run dev`
-- test app `npm run test`
+- `http://localhost:3000/` endpointissa on Apidoc
+
+- `http://localhost:3000/api/v1/` on Apiroot
+
+## Kuvien thumbnailien ja videoiden screenshotien osoitteet generoidaan SQL-kyselyllä `mediaModel.ts` tiedostossa. Tietokantaan on tallennettu tiedostojen nimet
+
+- Testit on päivittämättä

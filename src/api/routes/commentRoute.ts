@@ -10,7 +10,7 @@ import {
   commentDelete,
 } from '../controllers/commentController';
 import {authenticate, validationErrors} from '../../middlewares';
-import {body} from 'express-validator';
+import {body, param} from 'express-validator';
 
 const router = express.Router();
 
@@ -19,27 +19,55 @@ router
   .get(commentListGet)
   .post(
     authenticate,
-    body('comment_text').notEmpty().isString().escape(),
-    body('media_id').notEmpty().isInt(),
+    body('comment_text')
+      .trim()
+      .notEmpty()
+      .isString()
+      .isLength({min: 1})
+      .escape(),
+    body('media_id').notEmpty().isInt({min: 1}).toInt(),
     validationErrors,
-    commentPost
+    commentPost,
   );
 
-router.route('/bymedia/:id').get(commentListByMediaIdGet);
+router
+  .route('/bymedia/:id')
+  .get(
+    param('id').isInt({min: 1}).toInt(),
+    validationErrors,
+    commentListByMediaIdGet,
+  );
 
 router.route('/byuser').get(authenticate, commentListByUserGet);
 
-router.route('/count/:id').get(commentCountByMediaIdGet);
+router
+  .route('/count/:id')
+  .get(
+    param('id').isInt({min: 1}).toInt(),
+    validationErrors,
+    commentCountByMediaIdGet,
+  );
 
 router
   .route('/:id')
-  .get(commentGet)
+  .get(param('id').isInt({min: 1}).toInt(), validationErrors, commentGet)
   .put(
     authenticate,
-    body('comment_text').notEmpty().isString().escape(),
+    param('id').isInt({min: 1}).toInt(),
+    body('comment_text')
+      .trim()
+      .notEmpty()
+      .isString()
+      .isLength({min: 1})
+      .escape(),
     validationErrors,
-    commentPut
+    commentPut,
   )
-  .delete(authenticate, commentDelete);
+  .delete(
+    authenticate,
+    param('id').isInt({min: 1}).toInt(),
+    validationErrors,
+    commentDelete,
+  );
 
 export default router;

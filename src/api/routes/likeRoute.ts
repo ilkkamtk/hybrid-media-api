@@ -9,7 +9,7 @@ import {
   likeByMediaIdAndUserIdGet,
 } from '../controllers/likeController';
 import {authenticate, validationErrors} from '../../middlewares';
-import {body} from 'express-validator';
+import {body, param} from 'express-validator';
 
 const router = express.Router();
 
@@ -18,21 +18,52 @@ router
   .get(likeListGet)
   .post(
     authenticate,
-    body('media_id').notEmpty().isInt(),
+    body('media_id').isInt({min: 1}).toInt(),
     validationErrors,
-    likePost
+    likePost,
   );
 
-router.route('/bymedia/:media_id').get(likeListByMediaIdGet);
+router
+  .route('/bymedia/:media_id')
+  .get(
+    param('media_id').isInt({min: 1}).toInt(),
+    validationErrors,
+    likeListByMediaIdGet,
+  );
 
 router
   .route('/bymedia/user/:media_id')
-  .get(authenticate, likeByMediaIdAndUserIdGet);
+  .get(
+    authenticate,
+    param('media_id').isInt({min: 1}).toInt(),
+    validationErrors,
+    likeByMediaIdAndUserIdGet,
+  );
 
-router.route('/byuser/:id').get(authenticate, likeListByUserIdGet);
+router
+  .route('/byuser/:id')
+  .get(
+    authenticate,
+    param('id').isInt({min: 1}).toInt(),
+    validationErrors,
+    likeListByUserIdGet,
+  );
 
-router.route('/count/:id').get(likeCountByMediaIdGet);
+router
+  .route('/count/:id')
+  .get(
+    param('id').isInt({min: 1}).toInt(),
+    validationErrors,
+    likeCountByMediaIdGet,
+  );
 
-router.route('/:id').delete(authenticate, likeDelete);
+router
+  .route('/:id')
+  .delete(
+    authenticate,
+    param('id').isInt({min: 1}).toInt(),
+    validationErrors,
+    likeDelete,
+  );
 
 export default router;

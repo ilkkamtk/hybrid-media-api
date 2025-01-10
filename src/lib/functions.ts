@@ -1,8 +1,10 @@
-import {ErrorResponse} from '@sharedTypes/MessageTypes';
+import {ErrorResponse} from 'hybrid-types/MessageTypes';
+import {NextFunction} from 'express';
+import CustomError from '../classes/CustomError';
 
 const fetchData = async <T>(
   url: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
 ): Promise<T> => {
   console.log('fetching data');
   const response = await fetch(url, options);
@@ -18,4 +20,8 @@ const fetchData = async <T>(
   return json;
 };
 
-export {fetchData};
+const handleError = (message: string, status: number, next: NextFunction) => {
+  next(new CustomError(message, status));
+};
+
+export {fetchData, handleError};
