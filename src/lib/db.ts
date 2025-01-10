@@ -8,11 +8,17 @@ const promisePool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
-  // Convert JSON fields to objects
+  // Type cast handler: converts JSON string fields to JavaScript objects
   typeCast: function (field, next) {
     if (field.type === 'JSON') {
       const fieldValue = field.string('utf8');
-      return fieldValue ? JSON.parse(fieldValue) : null;
+      if (!fieldValue) return null;
+      try {
+        return JSON.parse(fieldValue);
+      } catch (error) {
+        console.error('Failed to parse JSON field:', error);
+        return null;
+      }
     }
     return next();
   },

@@ -10,9 +10,6 @@ const fetchAllRatings = async (): Promise<Rating[]> => {
   const [rows] = await promisePool.execute<RowDataPacket[] & Rating[]>(
     'SELECT * FROM Ratings',
   );
-  if (rows.length === 0) {
-    throw new CustomError(ERROR_MESSAGES.RATING.NOT_FOUND, 404);
-  }
   return rows;
 };
 
@@ -22,9 +19,6 @@ const fetchRatingsByMediaId = async (media_id: number): Promise<Rating[]> => {
     'SELECT * FROM Ratings WHERE media_id = ?',
     [media_id],
   );
-  if (rows.length === 0) {
-    throw new CustomError(ERROR_MESSAGES.RATING.NOT_FOUND_MEDIA, 404);
-  }
   return rows;
 };
 
@@ -48,9 +42,6 @@ const fetchRatingsByUserId = async (user_id: number): Promise<Rating[]> => {
     'SELECT * FROM Ratings WHERE user_id = ?',
     [user_id],
   );
-  if (rows.length === 0) {
-    throw new CustomError(ERROR_MESSAGES.RATING.NOT_FOUND_USER, 404);
-  }
   return rows;
 };
 
