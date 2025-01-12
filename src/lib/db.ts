@@ -16,12 +16,18 @@ const promisePool = mysql.createPool({
         try {
           return JSON.parse(fieldValue);
         } catch (error) {
-          console.error('Failed to parse JSON field:', error);
+          console.error('Failed to parse JSON field:', {
+            error: (error as Error).message,
+            field: field.name,
+            table: field.table,
+            value: fieldValue,
+          });
           return null;
         }
       }
       return next();
     }
+    return next();
   },
 });
 
