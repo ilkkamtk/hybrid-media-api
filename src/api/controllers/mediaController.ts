@@ -8,20 +8,20 @@ import {
   fetchMediaByUserId,
   putMedia,
 } from '../models/mediaModel';
-import {MediaResponse, MessageResponse} from 'hybrid-types/MessageTypes';
+import {MessageResponse} from 'hybrid-types/MessageTypes';
 import {MediaItem, TokenContent} from 'hybrid-types/DBTypes';
 import CustomError from '../../classes/CustomError';
 import {ERROR_MESSAGES} from '../../utils/errorMessages';
 
 const mediaListGet = async (
   req: Request<{}, {}, {page: string; limit: string}>,
-  res: Response<MediaResponse>,
+  res: Response<MediaItem[]>,
   next: NextFunction,
 ) => {
   try {
     const {page, limit} = req.query;
     const media = await fetchAllMedia(Number(page), Number(limit));
-    res.json({message: 'Media found', media});
+    res.json(media);
   } catch (error) {
     next(error);
   }
@@ -29,13 +29,13 @@ const mediaListGet = async (
 
 const mediaGet = async (
   req: Request<{id: string}>,
-  res: Response<MediaResponse>,
+  res: Response<MediaItem>,
   next: NextFunction,
 ) => {
   try {
     const id = Number(req.params.id);
     const media = await fetchMediaById(id);
-    res.json({message: 'Media found', media});
+    res.json(media);
   } catch (error) {
     next(error);
   }
@@ -43,14 +43,14 @@ const mediaGet = async (
 
 const mediaPost = async (
   req: Request<{}, {}, Omit<MediaItem, 'media_id' | 'created_at'>>,
-  res: Response<MediaResponse, {user: TokenContent}>,
+  res: Response<MessageResponse, {user: TokenContent}>,
   next: NextFunction,
 ) => {
   try {
     // add user_id to media object from token
     req.body.user_id = res.locals.user.user_id;
-    const newMedia = await postMedia(req.body);
-    res.json({message: 'Media created', media: newMedia});
+    await postMedia(req.body);
+    res.json({message: 'Media created'});
   } catch (error) {
     next(error);
   }
@@ -77,18 +77,18 @@ const mediaDelete = async (
 
 const mediaPut = async (
   req: Request<{id: string}, {}, Pick<MediaItem, 'title' | 'description'>>,
-  res: Response<MediaResponse, {user: TokenContent}>,
+  res: Response<MessageResponse, {user: TokenContent}>,
   next: NextFunction,
 ) => {
   try {
     const id = Number(req.params.id);
-    const media = await putMedia(
+    await putMedia(
       req.body,
       id,
       res.locals.user.user_id,
       res.locals.user.level_name,
     );
-    res.json({message: 'Media updated', media});
+    res.json({message: 'Media updated'});
   } catch (error) {
     next(error);
   }
@@ -96,7 +96,7 @@ const mediaPut = async (
 
 const mediaByUserGet = async (
   req: Request<{id: string}>,
-  res: Response<MediaResponse, {user: TokenContent}>,
+  res: Response<MediaItem[], {user: TokenContent}>,
   next: NextFunction,
 ) => {
   try {
@@ -106,7 +106,7 @@ const mediaByUserGet = async (
     }
 
     const media = await fetchMediaByUserId(id);
-    res.json({message: 'Media found', media});
+    res.json(media);
   } catch (error) {
     next(error);
   }
@@ -114,12 +114,12 @@ const mediaByUserGet = async (
 
 const mediaListMostLikedGet = async (
   req: Request,
-  res: Response<MediaResponse>,
+  res: Response<MediaItem>,
   next: NextFunction,
 ) => {
   try {
     const media = await fetchMostLikedMedia();
-    res.json({message: 'Most liked media found', media});
+    res.json(media);
   } catch (error) {
     next(error);
   }
