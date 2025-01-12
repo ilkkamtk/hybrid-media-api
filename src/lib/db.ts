@@ -12,7 +12,20 @@ const promisePool = mysql.createPool({
   typeCast: function (field, next) {
     if (field.type === 'JSON') {
       const fieldValue = field.string('utf8');
-      return fieldValue ? JSON.parse(fieldValue) : null;
+      if (fieldValue) {
+        try {
+          return JSON.parse(fieldValue);
+        } catch (error) {
+          console.error('Failed to parse JSON field:', {
+            error: (error as Error).message,
+            field: field.name,
+            table: field.table,
+            value: fieldValue,
+          });
+          return null;
+        }
+      }
+      return next();
     }
     return next();
   },
