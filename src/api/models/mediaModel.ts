@@ -44,7 +44,6 @@ const fetchAllMedia = async (
 
 const fetchMediaById = async (id: number): Promise<MediaItem> => {
   const sql = `${BASE_MEDIA_QUERY},
-    CONCAT(?, filename) AS filename,
     CASE
       WHEN media_type LIKE '%image%'
       THEN CONCAT(filename, '-thumb.png')
