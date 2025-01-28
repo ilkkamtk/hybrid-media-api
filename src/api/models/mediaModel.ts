@@ -34,7 +34,7 @@ const fetchAllMedia = async (
   const sql = `${BASE_MEDIA_QUERY} 
   FROM MediaItems
     ${limit ? 'LIMIT ? OFFSET ?' : ''}`;
-  const params = [uploadPath, limit, offset];
+  const params = [limit, offset];
   const stmt = promisePool.format(sql, params);
   console.log(stmt);
 
@@ -64,7 +64,7 @@ const fetchMediaById = async (id: number): Promise<MediaItem> => {
     END AS screenshots
   FROM MediaItems
               WHERE media_id=?`;
-  const params = [uploadPath, id];
+  const params = [id];
   const stmt = promisePool.format(sql, params);
   console.log(stmt);
   const [rows] = await promisePool.execute<RowDataPacket[] & MediaItem[]>(stmt);
