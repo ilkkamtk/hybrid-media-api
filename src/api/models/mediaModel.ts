@@ -14,7 +14,7 @@ const uploadPath = process.env.UPLOAD_URL;
 // uploadPath needs to be passed to the query
 // Example usage:
 // ....execute(BASE_MEDIA_QUERY, [uploadPath, otherParams]);
-  const BASE_MEDIA_QUERY = `
+const BASE_MEDIA_QUERY = `
   SELECT
     media_id,
     user_id,
@@ -33,8 +33,8 @@ const uploadPath = process.env.UPLOAD_URL;
     CASE
       WHEN media_type NOT LIKE '%image%'
       THEN (
-        SELECT JSON_ARRAYAGG(
-          CONCAT(base_url, filename, '-thumb-', numbers.n, '.png')
+        SELECT JSON_ARRAY(
+          CONCAT(base_url, filename, '-thumb-', n, '.png')
         )
         FROM (
           SELECT 1 AS n UNION SELECT 2 UNION SELECT 3
@@ -52,7 +52,7 @@ const fetchAllMedia = async (
   limit: number | undefined = undefined,
 ): Promise<MediaItem[]> => {
   const offset = ((page || 1) - 1) * (limit || 10);
-  const sql = `${BASE_MEDIA_QUERY} 
+  const sql = `${BASE_MEDIA_QUERY}
     ${limit ? 'LIMIT ? OFFSET ?' : ''}`;
   const params = limit ? [uploadPath, limit, offset] : [uploadPath];
   const stmt = promisePool.format(sql, params);
