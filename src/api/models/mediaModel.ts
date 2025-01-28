@@ -33,13 +33,13 @@ const BASE_MEDIA_QUERY = `
     CASE
       WHEN media_type NOT LIKE '%image%'
       THEN (
-        SELECT JSON_ARRAYAGG(
-          CONCAT(base_url, filename, '-thumb-', n, '.png')
+        SELECT JSON_ARRAY(
+          CONCAT(base_url, filename, '-thumb-1.png'),
+          CONCAT(base_url, filename, '-thumb-2.png'),
+          CONCAT(base_url, filename, '-thumb-3.png'),
+          CONCAT(base_url, filename, '-thumb-4.png'),
+          CONCAT(base_url, filename, '-thumb-5.png')
         )
-        FROM (
-          SELECT 1 AS n UNION SELECT 2 UNION SELECT 3
-          UNION SELECT 4 UNION SELECT 5
-        ) numbers
       )
       ELSE NULL
     END AS screenshots
