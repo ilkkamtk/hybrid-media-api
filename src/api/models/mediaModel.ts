@@ -23,26 +23,7 @@ const BASE_MEDIA_QUERY = `
     media_type,
     title,
     description,
-    created_at,
-    CONCAT(?, filename) AS filename,
-    CASE
-      WHEN media_type LIKE '%image%'
-      THEN CONCAT(filename, '-thumb.png')
-      ELSE NULL
-    END AS thumbnail,
-    CASE
-      WHEN media_type NOT LIKE '%image%'
-      THEN (
-        SELECT JSON_ARRAYAGG(
-          CONCAT(filename, '-thumb-', numbers.n, '.png')
-        )
-        FROM (
-          SELECT 1 AS n UNION SELECT 2 UNION SELECT 3
-          UNION SELECT 4 UNION SELECT 5
-        ) numbers
-      )
-      ELSE NULL
-    END AS screenshots
+    created_at
   FROM MediaItems
 `;
 
@@ -62,7 +43,26 @@ const fetchAllMedia = async (
 };
 
 const fetchMediaById = async (id: number): Promise<MediaItem> => {
-  const sql = `${BASE_MEDIA_QUERY}
+  const sql = `${BASE_MEDIA_QUERY},
+    CONCAT(?, filename) AS filename,
+    CASE
+      WHEN media_type LIKE '%image%'
+      THEN CONCAT(filename, '-thumb.png')
+      ELSE NULL
+    END AS thumbnail,
+    CASE
+      WHEN media_type NOT LIKE '%image%'
+      THEN (
+        SELECT JSON_ARRAYAGG(
+          CONCAT(filename, '-thumb-', numbers.n, '.png')
+        )
+        FROM (
+          SELECT 1 AS n UNION SELECT 2 UNION SELECT 3
+          UNION SELECT 4 UNION SELECT 5
+        ) numbers
+      )
+      ELSE NULL
+    END AS screenshots
               WHERE media_id=?`;
   const params = [uploadPath, id];
   const stmt = promisePool.format(sql, params);
