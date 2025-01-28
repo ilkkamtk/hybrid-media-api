@@ -14,7 +14,6 @@ const uploadPath = process.env.UPLOAD_URL;
 // uploadPath needs to be passed to the query
 // Example usage:
 // ....execute(BASE_MEDIA_QUERY, [uploadPath, otherParams]);
-const BASE_MEDIA_QUERY = `
   const BASE_MEDIA_QUERY = `
   SELECT
     media_id,
