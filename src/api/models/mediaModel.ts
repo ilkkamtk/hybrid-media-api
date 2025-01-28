@@ -23,27 +23,8 @@ const BASE_MEDIA_QUERY = `
     media_type,
     title,
     description,
-    created_at
-`;
-
-const fetchAllMedia = async (
-  page: number | undefined = undefined,
-  limit: number | undefined = undefined,
-): Promise<MediaItem[]> => {
-  const offset = ((page || 1) - 1) * (limit || 10);
-  const sql = `${BASE_MEDIA_QUERY} 
-  FROM MediaItems
-    ${limit ? 'LIMIT ? OFFSET ?' : ''}`;
-  const params = [limit, offset];
-  const stmt = promisePool.format(sql, params);
-  console.log(stmt);
-
-  const [rows] = await promisePool.execute<RowDataPacket[] & MediaItem[]>(stmt);
-  return rows;
-};
-
-const fetchMediaById = async (id: number): Promise<MediaItem> => {
-  const sql = `${BASE_MEDIA_QUERY},
+    created_at,
+    CONCAT(?, filename) AS filename,
     CASE
       WHEN media_type LIKE '%image%'
       THEN CONCAT(filename, '-thumb.png')
@@ -63,8 +44,27 @@ const fetchMediaById = async (id: number): Promise<MediaItem> => {
       ELSE NULL
     END AS screenshots
   FROM MediaItems
+`;
+
+const fetchAllMedia = async (
+  page: number | undefined = undefined,
+  limit: number | undefined = undefined,
+): Promise<MediaItem[]> => {
+  const offset = ((page || 1) - 1) * (limit || 10);
+  const sql = `${BASE_MEDIA_QUERY} 
+    ${limit ? 'LIMIT ? OFFSET ?' : ''}`;
+  const params = [uploadPath, limit, offset];
+  const stmt = promisePool.format(sql, params);
+  console.log(stmt);
+
+  const [rows] = await promisePool.execute<RowDataPacket[] & MediaItem[]>(stmt);
+  return rows;
+};
+
+const fetchMediaById = async (id: number): Promise<MediaItem> => {
+  const sql = `${BASE_MEDIA_QUERY}
               WHERE media_id=?`;
-  const params = [id];
+  const params = [uploadPath, id];
   const stmt = promisePool.format(sql, params);
   console.log(stmt);
   const [rows] = await promisePool.execute<RowDataPacket[] & MediaItem[]>(stmt);
