@@ -10,8 +10,15 @@ const promisePool = mysql.createPool({
   queueLimit: 0,
   // Convert JSON fields to objects
   typeCast: function (field, next) {
-    if (field.type === 'JSON') {
-      const fieldValue = field.string('utf8');
+    console.log('TypeCast field:', {
+      type: field.type,
+      name: field.name,
+      table: field.table,
+    });
+    // Check for both string 'JSON' and MySQL type code 245
+    if (field.name === 'screenshots') {
+      const fieldValue = field.string();
+      console.log('JSON field value:', fieldValue);
       if (fieldValue) {
         try {
           return JSON.parse(fieldValue);
