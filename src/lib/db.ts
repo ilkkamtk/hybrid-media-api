@@ -17,7 +17,7 @@ const promisePool = mysql.createPool({
     });
     // Check for both string 'JSON' and MySQL type code 245
     if (field.name === 'screenshots') {
-      const fieldValue = field.string();
+      const fieldValue = field.string('utf-8');
       console.log('JSON field value:', fieldValue);
       if (fieldValue) {
         try {
