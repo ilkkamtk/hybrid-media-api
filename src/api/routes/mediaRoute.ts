@@ -30,10 +30,10 @@ router
       .isLength({min: 3, max: 128})
       .escape(),
     body('description')
+      .optional()
       .trim()
-      .notEmpty()
       .isString()
-      .isLength({max: 1000})
+      .isLength({max: 2000})
       .escape(),
     body('filename')
       .trim()
@@ -65,7 +65,7 @@ router
       .optional()
       .trim()
       .isString()
-      .isLength({max: 1000})
+      .isLength({max: 2000})
       .escape(),
     validationErrors,
     mediaPut,
