@@ -44,7 +44,7 @@ router
   .route('/byuser/:id')
   .get(
     authenticate,
-    param('id').isInt({min: 1}).toInt(),
+    param('id').optional().isInt({min: 1}).toInt(),
     validationErrors,
     likeListByUserIdGet,
   );

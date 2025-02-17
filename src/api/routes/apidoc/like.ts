@@ -124,8 +124,8 @@
  */
 
 /**
- * @api {get} /likes/byuser/:id Get Likes by User ID
- * @apiName GetLikesByUserId
+ * @api {get} /likes/byuser/:id Get Likes by User ID or Token
+ * @apiName GetLikesByUserIdOrToken
  * @apiGroup Like
  *
  * @apiHeader {String} Authorization Bearer token for authentication
