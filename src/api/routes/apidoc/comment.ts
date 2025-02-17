@@ -77,7 +77,7 @@
  * @apiName GetCommentsByUserToken
  * @apiGroup Comment
  *
- * @apiHeader {String} Auth orization Bearer token for authentication.
+ * @apiHeader {String} Authorization Bearer token for authentication.
  *
  * @apiSuccess {Object[]} Array of comments for the user
  * @apiSuccess {Number} comment_id ID of the comment
