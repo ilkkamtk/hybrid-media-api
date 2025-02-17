@@ -39,11 +39,14 @@ const likeListByMediaIdGet = async (
 
 const likeListByUserIdGet = async (
   req: Request<{id: string}>,
-  res: Response<Like[]>,
+  res: Response<Like[], {user: TokenContent}>,
   next: NextFunction,
 ) => {
   try {
-    const likes = await fetchLikesByUserId(Number(req.params.id));
+    const user_id = req.params.id
+      ? Number(req.params.id)
+      : res.locals.user.user_id;
+    const likes = await fetchLikesByUserId(user_id);
     res.json(likes);
   } catch (error) {
     next(error);
