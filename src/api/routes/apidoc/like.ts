@@ -130,7 +130,7 @@
  *
  * @apiHeader {String} Authorization Bearer token for authentication
  *
- * @apiParam {Number} id User's ID (min: 1)
+ * @apiParam {Number} [id] Optional User's ID (min: 1). If not provided, user ID from the authentication token will be used
  *
  * @apiSuccess {Object[]} likes Array of like objects
  * @apiSuccess {Number} likes.like_id Like's unique ID
