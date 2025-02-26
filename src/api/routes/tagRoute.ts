@@ -6,6 +6,7 @@ import {
   tagDelete,
   tagFilesByTagGet,
   tagDeleteFromMedia,
+  tagFilesByTagNameGet,
 } from '../controllers/tagController';
 import {authenticate, validationErrors} from '../../middlewares';
 import {body, param} from 'express-validator';
@@ -37,13 +38,31 @@ router
   );
 
 router
-  .route('/bymedia/:media_id/:tag_id')
+  .route('/bymedia/:media_id/:tag_name')
   .delete(
     authenticate,
     param('media_id').isInt({min: 1}).toInt(),
-    param('tag_id').isInt({min: 1}).toInt(),
+    param('tag_name')
+      .trim()
+      .notEmpty()
+      .isString()
+      .isLength({min: 2, max: 50})
+      .escape(),
     validationErrors,
     tagDeleteFromMedia,
+  );
+
+router
+  .route('/bytagname/:tag_name')
+  .get(
+    param('tag_name')
+      .trim()
+      .notEmpty()
+      .isString()
+      .isLength({min: 2, max: 50})
+      .escape(),
+    validationErrors,
+    tagFilesByTagNameGet,
   );
 
 router

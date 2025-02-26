@@ -49,6 +49,10 @@ router
 
 router.route('/mostliked').get(mediaListMostLikedGet);
 
+router.route('/byuser/:id').get(mediaByUserGet);
+
+router.route('/bytoken').get(authenticate, mediaByUserGet);
+
 router
   .route('/:id')
   .get(param('id').isInt({min: 1}).toInt(), validationErrors, mediaGet)
@@ -76,9 +80,5 @@ router
     validationErrors,
     mediaDelete,
   );
-
-router.route('/byuser/:id').get(mediaByUserGet);
-
-router.route('/bytoken').get(authenticate, mediaByUserGet);
 
 export default router;

@@ -65,9 +65,9 @@ const ratingPost = async (
 ) => {
   try {
     const result = await postRating(
-      Number(req.body.rating_value),
-      res.locals.user.user_id,
       Number(req.body.media_id),
+      res.locals.user.user_id,
+      Number(req.body.rating_value),
     );
     if (result) {
       res.json(result);
@@ -89,13 +89,12 @@ const ratingDelete = async (
     const result = await deleteRating(
       Number(req.params.id),
       res.locals.user.user_id,
-      res.locals.user.level_name,
     );
     if (result) {
       res.json(result);
       return;
     }
-    next(new CustomError('Rating not deleted', 500));
+    next(new CustomError('The Rating was not found', 500));
   } catch (error) {
     next(error);
   }

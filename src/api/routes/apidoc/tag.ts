@@ -1,5 +1,5 @@
 /**
- * @api {get} /tag Get All Tags
+ * @api {get} /tags Get All Tags
  * @apiName GetAllTags
  * @apiGroup Tag
  *
@@ -20,7 +20,7 @@
  */
 
 /**
- * @api {post} /tag Create Tag
+ * @api {post} /tags Create Tag
  * @apiName PostTag
  * @apiGroup Tag
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * @api {get} /tag/bymedia/:id Get Tags by Media ID
+ * @api {get} /tags/bymedia/:id Get Tags by Media ID
  * @apiName GetTagsByMediaId
  * @apiGroup Tag
  *
@@ -57,7 +57,7 @@
  */
 
 /**
- * @api {delete} /tag/bymedia/:media_id/:tag_id Delete Tag from Media
+ * @api {delete} /tags/bymedia/:media_id/:tag_id Delete Tag from Media
  * @apiName DeleteTagFromMedia
  * @apiGroup Tag
  *
@@ -73,7 +73,23 @@
  */
 
 /**
- * @api {get} /tag/bytag/:tag_id Get Media by Tag
+ * @api {delete} /tags/bymedia/:media_id/:tag_name Delete Tag from Media by Tag Name
+ * @apiName DeleteTagFromMediaByName
+ * @apiGroup Tag
+ *
+ * @apiHeader {String} Authorization Bearer token for authentication
+ *
+ * @apiParam {Number} media_id Media's ID (min: 1)
+ * @apiParam {Number} tag_name Tag's name
+ *
+ * @apiSuccess {String} message Success message
+ *
+ * @apiError Unauthorized Not authorized to remove this tag
+ * @apiError NotFound Media or tag not found
+ */
+
+/**
+ * @api {get} /tags/bytag/:tag_id Get Media by Tag
  * @apiName GetMediaByTag
  * @apiGroup Tag
  *
@@ -85,7 +101,19 @@
  */
 
 /**
- * @api {delete} /tag/:id Delete Tag
+ * @api {get} /tags/bytagname/:tag_name Get Media by Tag Name
+ * @apiName GetMediaByTagName
+ * @apiGroup Tag
+ *
+ * @apiParam {Number} tag_name Tag's name
+ *
+ * @apiSuccess {Object[]} media Array of media items with this tag
+ *
+ * @apiError MediaNotFound No media found with this tag
+ */
+
+/**
+ * @api {delete} /tags/:id Delete Tag
  * @apiName DeleteTag
  * @apiGroup Tag
  *

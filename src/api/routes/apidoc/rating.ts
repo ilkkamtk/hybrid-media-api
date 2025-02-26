@@ -1,5 +1,5 @@
 /**
- * @api {get} /rating Get All Ratings
+ * @api {get} /ratings Get All Ratings
  * @apiName GetRatingList
  * @apiGroup Rating
  *
@@ -93,7 +93,7 @@
  *     }
  */
 /**
- * @api {get} /rating/average/:id Get Average Rating
+ * @api {get} /ratings/average/:id Get Average Rating
  * @apiName GetAverageRating
  * @apiGroup Rating
  *
@@ -116,7 +116,7 @@
  *
  * @apiHeader {String} Authorization Bearer token for authentication.
  *
- * @apiParam {Number} id Rating's unique ID.
+ * @apiParam {Number} id Media item's unique ID.
  *
  * @apiSuccess {String} message Success message.
  *
@@ -126,7 +126,7 @@
  *       "message": "Rating deleted successfully"
  *     }
  *
- * @apiError RatingNotFound The id of the Rating was not found.
+ * @apiError RatingNotFound The Rating was not found.
  *
  * @apiErrorExample Error-Response:
  *     HTTP/1.1 404 Not Found
@@ -135,7 +135,7 @@
  *     }
  */
 /**
- * @api {post} /rating Post Rating
+ * @api {post} /ratings Post Rating
  * @apiName PostRating
  * @apiGroup Rating
  *

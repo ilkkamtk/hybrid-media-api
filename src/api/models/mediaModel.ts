@@ -56,7 +56,6 @@ const fetchAllMedia = async (
     ${limit ? 'LIMIT ? OFFSET ?' : ''}`;
   const params = limit ? [uploadPath, limit, offset] : [uploadPath];
   const stmt = promisePool.format(sql, params);
-  console.log(stmt);
 
   const [rows] = await promisePool.execute<RowDataPacket[] & MediaItem[]>(stmt);
   return rows;
@@ -67,7 +66,6 @@ const fetchMediaById = async (id: number): Promise<MediaItem> => {
               WHERE media_id=?`;
   const params = [uploadPath, id];
   const stmt = promisePool.format(sql, params);
-  console.log(stmt);
   const [rows] = await promisePool.execute<RowDataPacket[] & MediaItem[]>(stmt);
   if (rows.length === 0) {
     throw new CustomError(ERROR_MESSAGES.MEDIA.NOT_FOUND, 404);
@@ -76,16 +74,17 @@ const fetchMediaById = async (id: number): Promise<MediaItem> => {
 };
 
 const postMedia = async (
-  media: Omit<MediaItem, 'media_id' | 'created_at' | 'thumbnail' | 'screenshots'>,
+  media: Omit<
+    MediaItem,
+    'media_id' | 'created_at' | 'thumbnail' | 'screenshots'
+  >,
 ): Promise<MediaItem> => {
   const {user_id, filename, filesize, media_type, title, description} = media;
   const sql = `INSERT INTO MediaItems (user_id, filename, filesize, media_type, title, description)
                VALUES (?, ?, ?, ?, ?, ?)`;
   const params = [user_id, filename, filesize, media_type, title, description];
   const stmt = promisePool.format(sql, params);
-  console.log(stmt);
   const [result] = await promisePool.execute<ResultSetHeader>(stmt);
-  console.log('postMedia', result);
   if (result.affectedRows === 0) {
     throw new CustomError(ERROR_MESSAGES.MEDIA.NOT_CREATED, 500);
   }
@@ -109,6 +108,7 @@ const putMedia = async (
       : [media.title, media.description, id, user_id];
 
   const stmt = promisePool.format(sql, params);
+
   const [result] = await promisePool.execute<ResultSetHeader>(stmt);
 
   if (result.affectedRows === 0) {
@@ -190,7 +190,7 @@ const deleteMedia = async (
   await connection.commit();
 
   return {
-    message: 'Media deleted',
+    message: 'Media item deleted',
   };
 };
 
@@ -198,7 +198,6 @@ const fetchMediaByUserId = async (user_id: number): Promise<MediaItem[]> => {
   const sql = `${BASE_MEDIA_QUERY} WHERE user_id = ?`;
   const params = [uploadPath, user_id];
   const stmt = promisePool.format(sql, params);
-  console.log(stmt);
 
   const [rows] = await promisePool.execute<RowDataPacket[] & MediaItem[]>(stmt);
   return rows;
@@ -215,7 +214,6 @@ const fetchMostLikedMedia = async (): Promise<MediaItem> => {
      )`;
   const params = [uploadPath];
   const stmt = promisePool.format(sql, params);
-  console.log(stmt);
 
   const [rows] = await promisePool.execute<
     RowDataPacket[] & MediaItem[] & {likes_count: number}
