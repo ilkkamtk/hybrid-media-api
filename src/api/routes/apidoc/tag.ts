@@ -1,5 +1,5 @@
 /**
- * @api {get} /tag Get All Tags
+ * @api {get} /tags Get All Tags
  * @apiName GetAllTags
  * @apiGroup Tag
  *
@@ -20,7 +20,7 @@
  */
 
 /**
- * @api {post} /tag Create Tag
+ * @api {post} /tags Create Tag
  * @apiName PostTag
  * @apiGroup Tag
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * @api {get} /tag/bymedia/:id Get Tags by Media ID
+ * @api {get} /tags/bymedia/:id Get Tags by Media ID
  * @apiName GetTagsByMediaId
  * @apiGroup Tag
  *
@@ -57,7 +57,7 @@
  */
 
 /**
- * @api {delete} /tag/bymedia/:media_id/:tag_id Delete Tag from Media
+ * @api {delete} /tags/bymedia/:media_id/:tag_id Delete Tag from Media
  * @apiName DeleteTagFromMedia
  * @apiGroup Tag
  *
@@ -73,7 +73,7 @@
  */
 
 /**
- * @api {delete} /tag/bymedia/:media_id/:tag_name Delete Tag from Media by Tag Name
+ * @api {delete} /tags/bymedia/:media_id/:tag_name Delete Tag from Media by Tag Name
  * @apiName DeleteTagFromMediaByName
  * @apiGroup Tag
  *
@@ -89,7 +89,7 @@
  */
 
 /**
- * @api {get} /tag/bytag/:tag_id Get Media by Tag
+ * @api {get} /tags/bytag/:tag_id Get Media by Tag
  * @apiName GetMediaByTag
  * @apiGroup Tag
  *
@@ -101,7 +101,7 @@
  */
 
 /**
- * @api {get} /tag/bytagname/:tag_name Get Media by Tag Name
+ * @api {get} /tags/bytagname/:tag_name Get Media by Tag Name
  * @apiName GetMediaByTagName
  * @apiGroup Tag
  *
@@ -113,7 +113,7 @@
  */
 
 /**
- * @api {delete} /tag/:id Delete Tag
+ * @api {delete} /tags/:id Delete Tag
  * @apiName DeleteTag
  * @apiGroup Tag
  *

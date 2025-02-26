@@ -1,5 +1,5 @@
 /**
- * @api {get} /rating Get All Ratings
+ * @api {get} /ratings Get All Ratings
  * @apiName GetRatingList
  * @apiGroup Rating
  *
@@ -93,7 +93,7 @@
  *     }
  */
 /**
- * @api {get} /rating/average/:id Get Average Rating
+ * @api {get} /ratings/average/:id Get Average Rating
  * @apiName GetAverageRating
  * @apiGroup Rating
  *
@@ -135,7 +135,7 @@
  *     }
  */
 /**
- * @api {post} /rating Post Rating
+ * @api {post} /ratings Post Rating
  * @apiName PostRating
  * @apiGroup Rating
  *
