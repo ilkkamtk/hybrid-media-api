@@ -43,14 +43,14 @@ const mediaGet = async (
 
 const mediaPost = async (
   req: Request<{}, {}, Omit<MediaItem, 'media_id' | 'created_at'>>,
-  res: Response<MessageResponse, {user: TokenContent}>,
+  res: Response<MessageResponse & {media: MediaItem}, {user: TokenContent}>,
   next: NextFunction,
 ) => {
   try {
     // add user_id to media object from token
     req.body.user_id = res.locals.user.user_id;
-    await postMedia(req.body);
-    res.json({message: 'Media created'});
+    const mediaItem = await postMedia(req.body);
+    res.json({message: 'Media created', media: mediaItem});
   } catch (error) {
     next(error);
   }
@@ -88,7 +88,7 @@ const mediaPut = async (
       res.locals.user.user_id,
       res.locals.user.level_name,
     );
-    res.json({message: 'Media updated'});
+    res.json({message: 'Media item updated'});
   } catch (error) {
     next(error);
   }

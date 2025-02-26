@@ -11,9 +11,9 @@ const postTag = (
 ): Promise<MessageResponse> => {
   return new Promise((resolve, reject) => {
     request(url)
-      .post(`/api/v1/tags/${mediaId}`)
+      .post(`/api/v1/tags`)
       .set('Authorization', `Bearer ${token}`)
-      .send({tag})
+      .send({tag_name: tag, media_id: mediaId})
       .expect(200, (err, response) => {
         if (err) {
           reject(err);
@@ -32,7 +32,7 @@ const getTags = (
 ): Promise<Tag[]> => {
   return new Promise((resolve, reject) => {
     request(url)
-      .get(`/api/v1/tags/${mediaId}`)
+      .get(`/api/v1/tags/bymedia/${mediaId}`)
       .expect(200, (err, response) => {
         if (err) {
           reject(err);
@@ -53,14 +53,14 @@ const deleteTag = (
 ): Promise<MessageResponse> => {
   return new Promise((resolve, reject) => {
     request(url)
-      .delete(`/api/v1/tags/${mediaId}/${tag}`)
+      .delete(`/api/v1/tags/bymedia/${mediaId}/${tag}`)
       .set('Authorization', `Bearer ${token}`)
       .expect(200, (err, response) => {
         if (err) {
           reject(err);
         } else {
           const message: MessageResponse = response.body;
-          expect(message.message).toBe('Tag deleted');
+          expect(message.message).toBe('Tag deleted from media item');
           resolve(message);
         }
       });

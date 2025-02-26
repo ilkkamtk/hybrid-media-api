@@ -85,7 +85,7 @@ const postMediaItem = (
   path: string,
   token: string,
   mediaItem: Partial<MediaItem>,
-): Promise<MessageResponse> => {
+): Promise<MediaItem> => {
   return new Promise((resolve, reject) => {
     request(url)
       .post(path)
@@ -95,9 +95,9 @@ const postMediaItem = (
         if (err) {
           reject(err);
         } else {
-          const message: MessageResponse = response.body;
-          expect(message.message).toBe('Media created');
-          resolve(message);
+          const item: MessageResponse & {media: MediaItem} = response.body;
+          expect(item.message).toBe('Media created');
+          resolve(item.media);
         }
       });
   });
@@ -143,7 +143,7 @@ const deleteMediaItem = (
           reject(err);
         } else {
           const message: MessageResponse = response.body;
-          expect(message.message).toBe('media item deleted');
+          expect(message.message).toBe('Media item deleted');
           resolve(message);
         }
       });
@@ -373,7 +373,7 @@ const getMediaByTag = (
 ): Promise<MediaItem[]> => {
   return new Promise((resolve, reject) => {
     request(url)
-      .get(`/api/v1/media/tag/${tag}`)
+      .get(`/api/v1/tags/bytagname/${tag}`)
       .expect(200, (err, response) => {
         if (err) {
           reject(err);

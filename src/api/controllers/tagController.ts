@@ -6,6 +6,8 @@ import {
   fetchFilesByTagById,
   deleteTag,
   deleteTagFromMedia,
+  fetchMediaByTagName,
+  deleteTagFromMediaById,
 } from '../models/tagModel';
 import {MessageResponse} from 'hybrid-types/MessageTypes';
 import {MediaItem, Tag, TagResult, TokenContent} from 'hybrid-types/DBTypes';
@@ -63,6 +65,19 @@ const tagFilesByTagGet = async (
   }
 };
 
+const tagFilesByTagNameGet = async (
+  req: Request<{tag_name: string}>,
+  res: Response<MediaItem[]>,
+  next: NextFunction,
+) => {
+  try {
+    const files = await fetchMediaByTagName(req.params.tag_name);
+    res.json(files);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const tagDelete = async (
   req: Request<{id: string}>,
   res: Response<MessageResponse, {user: TokenContent}>,
@@ -80,12 +95,29 @@ const tagDelete = async (
 };
 
 const tagDeleteFromMedia = async (
-  req: Request<{tag_id: string; media_id: string}>,
+  req: Request<{tag_name: string; media_id: string}>,
   res: Response<MessageResponse, {user: TokenContent}>,
   next: NextFunction,
 ) => {
   try {
     const result = await deleteTagFromMedia(
+      req.params.tag_name,
+      Number(req.params.media_id),
+      res.locals.user.user_id,
+    );
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const tagDeleteFromMediaById = async (
+  req: Request<{tag_id: string; media_id: string}>,
+  res: Response<MessageResponse, {user: TokenContent}>,
+  next: NextFunction,
+) => {
+  try {
+    const result = await deleteTagFromMediaById(
       Number(req.params.tag_id),
       Number(req.params.media_id),
       res.locals.user.user_id,
@@ -103,4 +135,6 @@ export {
   tagDelete,
   tagFilesByTagGet,
   tagDeleteFromMedia,
+  tagFilesByTagNameGet,
+  tagDeleteFromMediaById,
 };

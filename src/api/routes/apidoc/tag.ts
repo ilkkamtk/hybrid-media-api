@@ -73,11 +73,39 @@
  */
 
 /**
+ * @api {delete} /tag/bymedia/:media_id/:tag_name Delete Tag from Media by Tag Name
+ * @apiName DeleteTagFromMediaByName
+ * @apiGroup Tag
+ *
+ * @apiHeader {String} Authorization Bearer token for authentication
+ *
+ * @apiParam {Number} media_id Media's ID (min: 1)
+ * @apiParam {Number} tag_name Tag's name
+ *
+ * @apiSuccess {String} message Success message
+ *
+ * @apiError Unauthorized Not authorized to remove this tag
+ * @apiError NotFound Media or tag not found
+ */
+
+/**
  * @api {get} /tag/bytag/:tag_id Get Media by Tag
  * @apiName GetMediaByTag
  * @apiGroup Tag
  *
  * @apiParam {Number} tag_id Tag's ID (min: 1)
+ *
+ * @apiSuccess {Object[]} media Array of media items with this tag
+ *
+ * @apiError MediaNotFound No media found with this tag
+ */
+
+/**
+ * @api {get} /tag/bytagname/:tag_name Get Media by Tag Name
+ * @apiName GetMediaByTagName
+ * @apiGroup Tag
+ *
+ * @apiParam {Number} tag_naem Tag's name
  *
  * @apiSuccess {Object[]} media Array of media items with this tag
  *

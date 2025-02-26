@@ -11,9 +11,9 @@ const postComment = (
 ): Promise<MessageResponse> => {
   return new Promise((resolve, reject) => {
     request(url)
-      .post(`/api/v1/comments/${mediaId}`)
+      .post(`/api/v1/comments`)
       .set('Authorization', `Bearer ${token}`)
-      .send({comment_text: comment})
+      .send({comment_text: comment, media_id: mediaId})
       .expect(200, (err, response) => {
         if (err) {
           reject(err);
@@ -32,7 +32,7 @@ const getComments = (
 ): Promise<Comment[]> => {
   return new Promise((resolve, reject) => {
     request(url)
-      .get(`/api/v1/comments/${mediaId}`)
+      .get(`/api/v1/comments/bymedia/${mediaId}`)
       .expect(200, (err, response) => {
         if (err) {
           reject(err);

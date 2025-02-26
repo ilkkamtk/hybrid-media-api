@@ -116,7 +116,7 @@
  *
  * @apiHeader {String} Authorization Bearer token for authentication.
  *
- * @apiParam {Number} id Rating's unique ID.
+ * @apiParam {Number} id Media item's unique ID.
  *
  * @apiSuccess {String} message Success message.
  *
@@ -126,7 +126,7 @@
  *       "message": "Rating deleted successfully"
  *     }
  *
- * @apiError RatingNotFound The id of the Rating was not found.
+ * @apiError RatingNotFound The Rating was not found.
  *
  * @apiErrorExample Error-Response:
  *     HTTP/1.1 404 Not Found

@@ -1,6 +1,7 @@
 import {MessageResponse} from 'hybrid-types/MessageTypes';
 import request from 'supertest';
 import {Application} from 'express';
+import {Like} from 'hybrid-types/DBTypes';
 
 const postLike = (
   url: string | Application,
@@ -9,7 +10,8 @@ const postLike = (
 ): Promise<MessageResponse> => {
   return new Promise((resolve, reject) => {
     request(url)
-      .post(`/api/v1/likes/${mediaId}`)
+      .post(`/api/v1/likes`)
+      .send({media_id: mediaId})
       .set('Authorization', `Bearer ${token}`)
       .expect(200, (err, response) => {
         if (err) {
@@ -29,7 +31,7 @@ const getLikes = (
 ): Promise<{count: number}> => {
   return new Promise((resolve, reject) => {
     request(url)
-      .get(`/api/v1/likes/${mediaId}`)
+      .get(`/api/v1/likes/count/${mediaId}`)
       .expect(200, (err, response) => {
         if (err) {
           reject(err);
@@ -37,6 +39,31 @@ const getLikes = (
           const result = response.body;
           expect(result).toHaveProperty('count');
           expect(typeof result.count).toBe('number');
+          expect(result.count).toBeGreaterThan(0);
+          resolve(result);
+        }
+      });
+  });
+};
+
+const getLikesByUser = (
+  url: string | Application,
+  mediaId: number,
+  token: string,
+): Promise<Like> => {
+  return new Promise((resolve, reject) => {
+    request(url)
+      .get(`/api/v1/likes/bymedia/user/${mediaId}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200, (err, response) => {
+        if (err) {
+          reject(err);
+        } else {
+          const result: Like = response.body;
+          expect(result.media_id).toBe(mediaId);
+          expect(result.user_id).toBeGreaterThan(0);
+          expect(result.created_at).not.toBe('');
+          expect(result.like_id).toBeGreaterThan(0);
           resolve(result);
         }
       });
@@ -104,4 +131,11 @@ const postInvalidLike = (
   });
 };
 
-export {postLike, getLikes, deleteLike, getNotFoundLike, postInvalidLike};
+export {
+  postLike,
+  getLikes,
+  deleteLike,
+  getNotFoundLike,
+  postInvalidLike,
+  getLikesByUser,
+};

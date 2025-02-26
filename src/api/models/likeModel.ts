@@ -81,6 +81,8 @@ const deleteLike = async (
 
   const [result] = await promisePool.execute<ResultSetHeader>(sql, params);
 
+  console.log('seppo', result, sql, params);
+
   if (result.affectedRows === 0) {
     throw new CustomError(ERROR_MESSAGES.LIKE.NOT_DELETED, 400);
   }
