@@ -76,7 +76,7 @@ const fetchMediaById = async (id: number): Promise<MediaItem> => {
 };
 
 const postMedia = async (
-  media: Omit<MediaItem, 'media_id' | 'created_at' | 'thumbnail'>,
+  media: Omit<MediaItem, 'media_id' | 'created_at' | 'thumbnail' | 'screenshots'>,
 ): Promise<MediaItem> => {
   const {user_id, filename, filesize, media_type, title, description} = media;
   const sql = `INSERT INTO MediaItems (user_id, filename, filesize, media_type, title, description)
