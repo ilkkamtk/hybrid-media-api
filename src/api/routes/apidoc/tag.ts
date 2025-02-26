@@ -105,7 +105,7 @@
  * @apiName GetMediaByTagName
  * @apiGroup Tag
  *
- * @apiParam {Number} tag_naem Tag's name
+ * @apiParam {Number} tag_name Tag's name
  *
  * @apiSuccess {Object[]} media Array of media items with this tag
  *
