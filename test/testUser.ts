@@ -1,5 +1,5 @@
-/* eslint-disable node/no-unpublished-import */
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
 import {User} from 'hybrid-types/DBTypes';
 import request from 'supertest';
 import {Application} from 'express';
@@ -14,6 +14,7 @@ const registerUser = (
   return new Promise((resolve, reject) => {
     request(url)
       .post(path)
+      .set('Content-Type', 'application/json')
       .send(user)
       .expect(200, (err, response) => {
         if (err) {

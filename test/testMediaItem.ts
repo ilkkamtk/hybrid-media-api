@@ -1,4 +1,3 @@
-/* eslint-disable node/no-unpublished-import */
 import {MediaItem} from 'hybrid-types/DBTypes';
 import {MessageResponse, UploadResponse} from 'hybrid-types/MessageTypes';
 import request from 'supertest';
@@ -107,18 +106,23 @@ const postMediaItem = (
 const putMediaItem = (
   url: string | Application,
   id: number,
-  mediaItem: Omit<MediaItem, 'media_id' | 'thumbnail' | 'created_at'>,
+  token: string,
+  mediaItem: Omit<
+    MediaItem,
+    'media_id' | 'thumbnail' | 'created_at' | 'screenshots'
+  >,
 ): Promise<MessageResponse> => {
   return new Promise((resolve, reject) => {
     request(url)
       .put(`/api/v1/media/${id}`)
+      .set('Authorization', `Bearer ${token}`)
       .send(mediaItem)
       .expect(200, (err, response) => {
         if (err) {
           reject(err);
         } else {
           const message: MessageResponse = response.body;
-          expect(message.message).toBe('media item updated');
+          expect(message.message).toBe('Media item updated');
           resolve(message);
         }
       });
@@ -353,6 +357,25 @@ const getMediaByToken = (
       .set('Authorization', `Bearer ${token}`)
       .expect(200, (err, response) => {
         if (err) {
+          console.log(response.body);
+          reject(err);
+        } else {
+          const mediaItems: MediaItem[] = response.body;
+          resolve(mediaItems);
+        }
+      });
+  });
+};
+
+const getMediaByTag = (
+  url: string | Application,
+  tag: string,
+): Promise<MediaItem[]> => {
+  return new Promise((resolve, reject) => {
+    request(url)
+      .get(`/api/v1/media/tag/${tag}`)
+      .expect(200, (err, response) => {
+        if (err) {
           reject(err);
         } else {
           const mediaItems: MediaItem[] = response.body;
@@ -380,4 +403,5 @@ export {
   getMostLikedMedia,
   getMediaByUser,
   getMediaByToken,
+  getMediaByTag,
 };
