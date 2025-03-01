@@ -118,6 +118,18 @@ const putMedia = async (
   return await fetchMediaById(id);
 };
 
+const checkOwnership = async (
+  media_id: number,
+  user_id: number,
+): Promise<boolean> => {
+  const sql = 'SELECT * FROM MediaItems WHERE media_id = ? AND user_id = ?';
+  const params = [media_id, user_id];
+  const stmt = promisePool.format(sql, params);
+
+  const [rows] = await promisePool.execute<RowDataPacket[]>(stmt);
+  return rows.length > 0;
+};
+
 const deleteMedia = async (
   media_id: number,
   user_id: number,
@@ -128,6 +140,10 @@ const deleteMedia = async (
 
   if (!media) {
     return {message: 'Media not found'};
+  }
+
+  if (!checkOwnership(media_id, user_id) && level_name !== 'Admin') {
+    return {message: 'Not authorized to delete media'};
   }
 
   media.filename = media?.filename.replace(
