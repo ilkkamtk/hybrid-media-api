@@ -142,7 +142,8 @@ const deleteMedia = async (
     return {message: 'Media not found'};
   }
 
-  if (!checkOwnership(media_id, user_id) && level_name !== 'Admin') {
+  const isOwner = await checkOwnership(media_id, user_id);
+  if (!isOwner && level_name !== 'Admin') {
     return {message: 'Not authorized to delete media'};
   }
 
