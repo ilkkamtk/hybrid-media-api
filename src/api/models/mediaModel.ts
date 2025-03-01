@@ -144,7 +144,7 @@ const deleteMedia = async (
 
   const isOwner = await checkOwnership(media_id, user_id);
   if (!isOwner && level_name !== 'Admin') {
-    return {message: 'Not authorized to delete media'};
+    throw new CustomError(ERROR_MESSAGES.MEDIA.NOT_DELETED, 403);
   }
 
   media.filename = media?.filename.replace(
