@@ -28,7 +28,7 @@ const BASE_MEDIA_QUERY = `
     CASE
       WHEN media_type LIKE '%image%'
       THEN CONCAT(base_url, filename, '-thumb.png')
-      ELSE NULL
+      ELSE CONCAT(base_url, filename, '-animation.gif')
     END AS thumbnail,
     CASE
       WHEN media_type NOT LIKE '%image%'
