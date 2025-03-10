@@ -65,6 +65,16 @@
  *     HTTP/1.1 200 OK
  *     {
  *       "message": "Media created"
+ *       "media": {
+ *         "media_id": 1,
+ *         "user_id": 1,
+ *         "filename": "example.jpg",
+ *         "filesize": 12345,
+ *         "media_type": "image/jpeg",
+ *         "title": "Example Title",
+ *         "description": "Example Description",
+ *         "created_at": "2024-01-26
+ *       }
  *     }
  *
  * @apiError ValidationError Input validation failed
