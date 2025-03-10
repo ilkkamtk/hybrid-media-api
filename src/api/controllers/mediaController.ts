@@ -8,7 +8,7 @@ import {
   fetchMediaByUserId,
   putMedia,
 } from '../models/mediaModel';
-import {MessageResponse} from 'hybrid-types/MessageTypes';
+import {MediaResponse, MessageResponse} from 'hybrid-types/MessageTypes';
 import {MediaItem, TokenContent} from 'hybrid-types/DBTypes';
 import CustomError from '../../classes/CustomError';
 import {ERROR_MESSAGES} from '../../utils/errorMessages';
@@ -43,7 +43,7 @@ const mediaGet = async (
 
 const mediaPost = async (
   req: Request<{}, {}, Omit<MediaItem, 'media_id' | 'created_at'>>,
-  res: Response<MessageResponse & {media: MediaItem}, {user: TokenContent}>,
+  res: Response<MediaResponse>,
   next: NextFunction,
 ) => {
   try {
