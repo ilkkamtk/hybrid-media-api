@@ -22,6 +22,7 @@ const tagListGet = async (
     const tags = await fetchAllTags();
     res.json(tags);
   } catch (error) {
+	  console.log('all error', error);
     next(error);
   }
 };

@@ -43,6 +43,7 @@ const fetchAllTags = async (): Promise<Tag[]> => {
   const [rows] = await promisePool.execute<RowDataPacket[] & Tag[]>(
     'SELECT * FROM Tags',
   );
+  console.log('tagit', rows);
   return rows;
 };
 
