@@ -57,6 +57,22 @@
  */
 
 /**
+ * @api {get} /tags/:id Get Tags by Media ID
+ * @apiName GetTagsByMediaIdAlias
+ * @apiGroup Tag
+ * @apiDescription Alias for /tags/bymedia/:id.
+ *
+ * @apiParam {Number} id Media's ID (min: 1)
+ *
+ * @apiSuccess {Object[]} tags Array of tags for the media
+ * @apiSuccess {Number} tags.tag_id Tag's ID
+ * @apiSuccess {String} tags.tag_name Tag's name
+ * @apiSuccess {Number} tags.media_id Media's ID
+ *
+ * @apiError TagsNotFound No tags found for this media
+ */
+
+/**
  * @api {delete} /tags/bymedia/:media_id/:tag_id Delete Tag from Media
  * @apiName DeleteTagFromMedia
  * @apiGroup Tag

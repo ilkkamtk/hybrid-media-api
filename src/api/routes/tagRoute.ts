@@ -75,6 +75,11 @@ router
 
 router
   .route('/:id')
+  .get(
+    param('id').isInt({min: 1}).toInt(),
+    validationErrors,
+    tagListByMediaIdGet,
+  )
   .delete(
     authenticate,
     param('id').isInt({min: 1}).toInt(),
